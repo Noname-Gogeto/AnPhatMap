@@ -103,7 +103,8 @@ Widget roundTextFieldWithLabel(String label, String hintText, String type,
 }
 
 Widget textFieldWithPrefixIcon(String hintText, IconData icon, String type,
-    TextEditingController textController, BuildContext context) {
+    TextEditingController textController, BuildContext context,
+    {bool readOnly = false}) {
   TextInputType inputType = TextInputType.text;
   switch (type) {
     case 'password':
@@ -137,6 +138,7 @@ Widget textFieldWithPrefixIcon(String hintText, IconData icon, String type,
                               locale: LocaleType.vi);
                         }
                       : () {},
+                  readOnly: readOnly,
                   controller: textController,
                   cursorColor: componentPrimaryColor,
                   obscureText: type == 'password',

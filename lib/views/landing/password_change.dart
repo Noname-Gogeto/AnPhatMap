@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, prefer_const_constructors, use_build_context_synchronously
 import 'dart:convert';
 
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, avoid_init_to_null, prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: avoid_print, avoid_init_to_null, prefer_const_constructors, use_build_context_synchronously, prefer_const_literals_to_create_immutables
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rcore/utils/color/theme.dart';
@@ -6,9 +6,9 @@ import 'package:rcore/utils/dialogs/dialog.dart';
 import 'package:rcore/views/employee/employee_info_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../controller/ServicesController.dart';
-import '../../utils/buttons/button.dart';
 import '../../utils/buttons/text_button.dart';
 import '../../utils/color/theme.dart';
+import '../../utils/drawer/navigation_drawer_widget.dart';
 
 class EmployeeListScreen extends StatefulWidget {
   const EmployeeListScreen({Key? key}) : super(key: key);
@@ -21,6 +21,8 @@ class EmployeeListScreen extends StatefulWidget {
 }
 
 class _EmployeeListScreenState extends State<EmployeeListScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   Map<String, dynamic>? jsonData = null;
   Map<String, dynamic>? jsonDetailsData = null;
   Map<String, dynamic>? userInfo = null;
@@ -59,8 +61,6 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
             'POST', {
           'uid': userInfo!['id'].toString(),
           'auth': userInfo!['auth_key'].toString(),
-          // 'limit': '78',
-          // 'perPage': '1',
         }).then(
           (Map<String, dynamic>? json) => ({
             if (json != null)
@@ -112,7 +112,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
       {bool? isValueBool = false}) {
     return Container(
       padding: const EdgeInsets.only(left: 5, right: 5, bottom: 3),
-      width: MediaQuery.of(context).size.width * 0.5,
+      width: MediaQuery.of(context).size.width - (60 + 60),
       // decoration: const BoxDecoration(
       //     border: Border(bottom: BorderSide(color: Colors.grey))),
       // margin: const EdgeInsets.only(bottom: 10),
@@ -192,24 +192,16 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
               // )
               Column(
                 children: [
-                  // SizedBox(
-                  //     width: 110,
-                  //     height: 45,
-                  //     child: customSizedButton('Chi tiết', context,
-                  //         Icons.details_rounded, Colors.green, 10, () {
-                  //       Navigator.of(context).push(MaterialPageRoute(
-                  //           builder: (context) => DetailsProductsListScreen(
-                  //                 jsonData: jsonData,
-                  //                 productIndex: index,
-                  //               )));
-                  //     })),
-                  // SizedBox(height: 20),
                   SizedBox(
-                      width: 110,
-                      height: 45,
-                      child: customSizedButton(
-                          'Chi tiết', context, Icons.history, Colors.blue, 10,
-                          () async {
+                    width: 40,
+                    height: 45,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.info,
+                        color: themeColor,
+                        size: 30,
+                      ),
+                      onPressed: () async {
                         await GetAPI(
                             'https://anphat.andin.io/index.php?r=restful-api/thong-tin-nhan-vien',
                             context,
@@ -234,7 +226,9 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
                             builder: (context) => EmployeeInfoScreen(
                                   jsonData: jsonDetailsData,
                                 )));
-                      })),
+                      },
+                    ),
+                  ),
                 ],
               )
             ],
@@ -266,150 +260,6 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
     return searchProductList;
   }
 
-  void getFullEmployeeInfo(int index) {
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (context) => Dialog(
-        child: Container(
-          alignment: Alignment.center,
-
-          // width: MediaQuery.of(context).size.width - 20,
-          // height: MediaQuery.of(context).size.height - 20,
-          padding: const EdgeInsets.all(10),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(
-              Radius.circular(30),
-            ),
-          ),
-          child: Column(
-            children: [
-              Text(
-                'Lịch sử trạng thái',
-                style: TextStyle(
-                  color: Colors.blue.shade200,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 26,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: Center(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      dataToTextFieldWithLable(
-                          'ID',
-                          dataFormat(jsonData!['data'][index]['id'].toString()),
-                          true,
-                          context),
-
-                      dataToTextFieldWithLable(
-                          'ID sản phẩm',
-                          dataFormat(jsonData!['data'][index]['san_pham_id']
-                              .toString()),
-                          true,
-                          context),
-                      dataToTextFieldWithLable(
-                          'Trạng thái sản phẩm',
-                          dataFormat(jsonData!['data'][index]['trang_thai']),
-                          true,
-                          context),
-                      dataToTextFieldWithLable(
-                          'Thời gian thay đổi trạng thái',
-                          dataFormat(
-                              jsonData!['data'][index]['created'].toString()),
-                          true,
-                          context),
-                      dataToTextFieldWithLable(
-                          'ID người dùng tác động',
-                          dataFormat(
-                              jsonData!['data'][index]['user_id'].toString()),
-                          true,
-                          context),
-                      dataToTextFieldWithLable(
-                          'Ghi chú',
-                          dataFormat(jsonData!['data'][index]['ghi_chu']),
-                          true,
-                          context),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     SizedBox(width: 5),
-                      //     SizedBox(
-                      //       width: 90,
-                      //       height: 45,
-                      //       child: customSizedButton(
-                      //           'Sửa', context, Icons.edit, Colors.green, 10, () {
-                      //         Navigator.of(context).pop();
-                      //         Navigator.of(context).push(
-                      //           MaterialPageRoute(
-                      //             builder: (context) => EditCustomerScreen(
-                      //               jsonData: jsonData,
-                      //               index: index,
-                      //             ),
-                      //           ),
-                      //         );
-                      //       }),
-                      //     ),
-                      //     SizedBox(
-                      //         width: 90,
-                      //         height: 45,
-                      //         child: customSizedButton(
-                      //             'Xóa', context, Icons.delete, Colors.red, 10,
-                      //             () {
-                      //           yesNoDialog('Thông báo',
-                      //               'Bạn có muốn xóa thông tin khách hàng không?',
-                      //               () {
-                      //             GetAPI(
-                      //                 'https://anphat.andin.io/index.php?r=restful-api/xoa-khach-hang',
-                      //                 context,
-                      //                 'POST', {
-                      //               'uid': userInfo!['id'].toString(),
-                      //               'auth': userInfo!['auth_key'].toString(),
-                      //               'id':
-                      //                   jsonData!['data'][index]['id'].toString(),
-                      //             }).then((Map<String, dynamic>? json) => ({
-                      //                   if (json != null)
-                      //                     {
-                      //                       notiDialog(
-                      //                           'Thông báo', json['message'],
-                      //                           () async {
-                      //                         var prefs = await SharedPreferences
-                      //                             .getInstance();
-                      //                         await prefs.setString('userInfo',
-                      //                             jsonEncode(json['data']));
-                      //                         Navigator.of(context).pop();
-                      //                         Navigator.of(context).pop();
-                      //                       }, context)
-                      //                     }
-                      //                 }));
-                      //           }, () => Navigator.of(context).pop(), context);
-                      //         })),
-                      //     SizedBox(width: 5),
-                      //     // IconButton(
-                      //     //   padding: EdgeInsets.only(right: 40),
-                      //     //   icon: Icon(
-                      //     //     Icons.delete,
-                      //     //     color: Colors.red,
-                      //     //   ),
-                      //     //   onPressed: () {},
-                      //     // )
-                      //   ],
-                      // )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   /// If the string is null or empty, return the string 'null', otherwise return the string
   ///
   /// Args:
@@ -426,6 +276,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
 
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
@@ -435,72 +286,72 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
               color: Colors.black,
             ),
           ),
-          iconTheme: IconThemeData(color: buttonPrimaryColorDeactive),
+          iconTheme: IconThemeData(
+            color: Colors.black,
+          ),
+          leading: Container(
+              padding: EdgeInsets.all(6),
+              child: Image.asset('lib/assets/images/main-logo.png')),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
+                icon: Icon(Icons.list))
+          ],
         ),
+        drawer: NavigationDrawerWidget(userInfo: userInfo),
         backgroundColor: const Color.fromARGB(255, 244, 242, 242),
         body: Container(
           padding: const EdgeInsets.all(20),
           color: const Color.fromARGB(255, 244, 242, 242),
           child: Column(
             children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 15),
-                child: Column(
-                  children: [
-                    Theme(
-                        data: Theme.of(context)
-                            .copyWith(primaryColor: themeColor),
-                        child: TextField(
-                            onChanged: (value) {
-                              // if (dateFromController.text == '' &&
-                              //     dateToController.text == '' &&
-                              //     addressController.text == '' &&
-                              //     idStaffInChargeController.text == '' &&
-                              //     idUpdateStaffController.text == '' &&
-                              //     searchController.text == '') {
-                              //   isLoadedAPI = false;
-                              // }
-                              setState(() {});
-                            },
-                            controller: searchController,
-                            cursorColor: componentPrimaryColor,
-                            enableSuggestions: true,
-                            autocorrect: true,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 10),
-                                hintText: 'Tìm kiếm nhân viên',
-                                prefixIcon: Icon(
-                                  Icons.production_quantity_limits_rounded,
-                                  color: themeColor,
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(Icons.search),
-                                  onPressed: () {
-                                    print('Filter press');
-                                    // searchFilterOptions();
-                                    setState(() {});
-                                  },
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: themeColor),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                fillColor: Color.fromRGBO(250, 250, 250, 1),
-                                filled: true),
-                            style: TextStyle(
-                              color: Colors.black,
-                            )))
-                  ],
-                ),
-              ),
+              // Container(
+              //   margin: EdgeInsets.only(bottom: 15),
+              //   child: Theme(
+              //     data: Theme.of(context).copyWith(primaryColor: themeColor),
+              //     child: TextField(
+              //       onChanged: (value) {
+              //         setState(() {});
+              //       },
+              //       controller: searchController,
+              //       cursorColor: componentPrimaryColor,
+              //       enableSuggestions: true,
+              //       autocorrect: true,
+              //       keyboardType: TextInputType.text,
+              //       textInputAction: TextInputAction.next,
+              //       decoration: InputDecoration(
+              //           contentPadding: EdgeInsets.symmetric(vertical: 10),
+              //           hintText: 'Tìm kiếm nhân viên',
+              //           prefixIcon: Icon(
+              //             Icons.production_quantity_limits_rounded,
+              //             color: themeColor,
+              //           ),
+              //           suffixIcon: IconButton(
+              //             icon: Icon(Icons.search),
+              //             onPressed: () {
+              //               print('Filter press');
+              //               // searchFilterOptions();
+              //               setState(() {});
+              //             },
+              //           ),
+              //           focusedBorder: OutlineInputBorder(
+              //               borderSide: BorderSide(color: themeColor),
+              //               borderRadius:
+              //                   BorderRadius.all(Radius.circular(30))),
+              //           enabledBorder: OutlineInputBorder(
+              //               borderSide: BorderSide(color: Colors.transparent),
+              //               borderRadius:
+              //                   BorderRadius.all(Radius.circular(30))),
+              //           fillColor: Color.fromRGBO(250, 250, 250, 1),
+              //           filled: true),
+              //       style: TextStyle(
+              //         color: Colors.black,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Expanded(
                 child: ListView(
                   scrollDirection: Axis.vertical,

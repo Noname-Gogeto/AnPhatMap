@@ -82,23 +82,25 @@ Widget selectTwoNhaLam(String label,
         borderRadius: BorderRadius.all(Radius.circular(10)),
         border: Border.all(color: themeColor)),
     child: TextButton(
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) => Dialog(
-                  child: CustomSelect2(
-                      height: MediaQuery.of(context).size.height - 160,
-                      hint: 'Tìm kiếm',
-                      items: items)));
-        },
-        child: Container(
-            height: 55,
-            padding: EdgeInsets.all(10),
-            width: MediaQuery.of(context).size.width,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(label, style: TextStyle(color: Colors.black)),
-            ))),
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (context) => Dialog(
+                child: CustomSelect2(
+                    height: MediaQuery.of(context).size.height - 160,
+                    hint: 'Tìm kiếm',
+                    items: items)));
+      },
+      child: Container(
+        height: 55,
+        padding: EdgeInsets.all(10),
+        width: MediaQuery.of(context).size.width,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(label, style: TextStyle(color: Colors.black)),
+        ),
+      ),
+    ),
   );
 }
 

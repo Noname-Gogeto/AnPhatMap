@@ -1,28 +1,27 @@
-// ignore_for_file: avoid_print, avoid_init_to_null, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: avoid_print, avoid_init_to_null, prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rcore/utils/color/theme.dart';
 import 'package:rcore/utils/dialogs/dialog.dart';
 import 'package:rcore/views/products/details_products_list_screen.dart';
-import 'package:rcore/views/products/sell_products_screen.dart';
+import 'package:rcore/views/products/products_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../controller/ServicesController.dart';
-import '../../utils/buttons/button.dart';
-import '../../utils/buttons/text_button.dart';
+
 import '../../utils/color/theme.dart';
+import '../../utils/drawer/navigation_drawer_widget.dart';
 
 class ProductsListScreen extends StatefulWidget {
   const ProductsListScreen({Key? key}) : super(key: key);
-
-  // final Map<String, dynamic>? userInfo;
-  // const CustomerScreen({Key? key, this.userInfo}) : super(key: key);
 
   @override
   State<ProductsListScreen> createState() => _ProductsListScreenState();
 }
 
 class _ProductsListScreenState extends State<ProductsListScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   Map<String, dynamic>? jsonData = null;
   Map<String, dynamic>? jsonDataState = null;
   Map<String, dynamic>? userInfo = null;
@@ -30,8 +29,8 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   bool isLoadedData = false;
   bool isLoadedAPI = false;
   int pageIndex = 1;
-  int pageLimit = 32;
-  int infoPerPage = 4;
+  int itemPageLimit = 32;
+  int infoPerPage = 8;
 
   // TextEditingController dateFromController = TextEditingController();
   // TextEditingController dateToController = TextEditingController();
@@ -61,8 +60,6 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
             'POST', {
           'uid': userInfo!['id'].toString(),
           'auth': userInfo!['auth_key'].toString(),
-          // 'limit': '78',
-          // 'perPage': '1',
         }).then(
           (Map<String, dynamic>? json) => ({
             if (json != null)
@@ -111,20 +108,12 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
       {bool? isValueBool = false}) {
     return Container(
       padding: const EdgeInsets.only(left: 5, right: 5, bottom: 3),
-      width: MediaQuery.of(context).size.width * 0.5,
-      // decoration: const BoxDecoration(
-      //     border: Border(bottom: BorderSide(color: Colors.grey))),
-      // margin: const EdgeInsets.only(bottom: 10),
+      width: MediaQuery.of(context).size.width - (60 + 60),
       child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisAlignment: MainAxisAlignment.start,
-
         children: [
-          // Text('$label:',
-          //     style:
-          //         const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           Icon(icon, color: iconColor),
-          SizedBox(width: 5),
+          SizedBox(width: 3),
           Flexible(
             child: Text(
               value,
@@ -134,7 +123,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
               // softWrap: false,
               overflow: TextOverflow.clip,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 color: iconColor,
                 fontWeight:
                     (isValueBool == true) ? FontWeight.bold : FontWeight.normal,
@@ -164,22 +153,81 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
         ),
         child: TextButton(
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (context) => DetailsProductsListScreen(
-                      jsonData: jsonData,
-                      productIndex: index,
-                    )));
+                  jsonData: jsonData,
+                  productIndex: index,
+                  userInfo: userInfo,
+                ),
+              ),
+            );
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 children: [
-                  textIconBetween(
-                      Icons.production_quantity_limits_rounded,
-                      Colors.black,
-                      dataFormat(jsonData!['content'][index]['id'].toString()),
-                      isValueBool: true),
+                  Container(
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 5, bottom: 3),
+                    width: MediaQuery.of(context).size.width - (60 + 60),
+                    child: Text(
+                        dataFormat(jsonData!['content'][index]['ngay_tao']),
+                        style: TextStyle(color: Colors.grey)),
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.only(left: 5, right: 5, bottom: 3),
+                    width: MediaQuery.of(context).size.width - (60 + 60),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.person, color: themeColor),
+                        SizedBox(width: 3),
+                        Flexible(
+                          child: Text(
+                            '${jsonData!['content'][index]['chu_nha']}',
+                            overflow: TextOverflow.clip,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: themeColor,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        SizedBox(
+                          width: 5,
+                          child: Text(
+                            '-',
+                            style: TextStyle(color: themeColor),
+                          ),
+                        ),
+                        Icon(
+                          Icons.phone,
+                          color: Colors.green,
+                        ),
+                        SizedBox(width: 3),
+                        Flexible(
+                          child: Text(
+                            '${dataFormat(jsonData!['content'][index]['dien_thoai'])}',
+                            overflow: TextOverflow.clip,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: themeColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // textIconBetween(Icons.person, themeColor,
+                  //     dataFormat(jsonData!['content'][index]['chu_nha'])),
+                  // textIconBetween(
+                  //     Icons.phone,
+                  //     Colors.green,
+                  //     dataFormat(jsonData!['content'][index]['dien_thoai']
+                  //         .toString())),
                   textIconBetween(
                       Icons.attach_money,
                       Colors.black,
@@ -188,63 +236,23 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                               jsonData!['content'][index]['gia_tu']))
                           .toString()),
                       isValueBool: true),
-                  textIconBetween(Icons.person, themeColor,
-                      dataFormat(jsonData!['content'][index]['chu_nha'])),
-                  textIconBetween(
-                      Icons.phone,
-                      Colors.green,
-                      dataFormat(jsonData!['content'][index]['dien_thoai']
-                          .toString())),
-                  textIconBetween(Icons.date_range_rounded, themeColor,
-                      dataFormat(jsonData!['content'][index]['ngay_tao'])),
                 ],
               ),
-              // IconButton(
-              //   onPressed: () {},
-              //   icon: Icon(Icons.delete),
-              // )
               Column(
                 children: [
-                  SizedBox(
-                      width: 110,
-                      height: 45,
-                      child: customSizedButton(
-                          'Bán', context, Icons.sell_rounded, Colors.green, 10,
-                          () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SellProductScreen(
-                                  jsonData: jsonData,
-                                  productIndex: index,
-                                  userInfo: userInfo,
-                                )));
-                      })),
-                  SizedBox(height: 20),
-                  SizedBox(
-                      width: 110,
-                      height: 45,
-                      child: customSizedButton(
-                          'Lịch sử', context, Icons.history, Colors.red, 10,
-                          () async {
-                        await GetAPI(
-                            'https://anphat.andin.io/index.php?r=restful-api/get-lich-su-trang-thai',
-                            context,
-                            'POST', {
-                          'uid': userInfo!['id'].toString(),
-                          'auth': userInfo!['auth_key'].toString(),
-                          'id': jsonData!['content'][index]['id'].toString(),
-                        }).then(
-                          (Map<String, dynamic>? json) => ({
-                            if (json != null)
-                              {
-                                setState(() {
-                                  jsonDataState = json;
-                                  isLoadedAPI = true;
-                                })
-                              }
-                          }),
-                        );
-                        if (jsonDataState != null) getFullProductInfo(0);
-                      })),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CreateProductScreen(),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.sell_rounded,
+                      color: Colors.green,
+                    ),
+                  )
                 ],
               )
             ],
@@ -253,249 +261,6 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
       ),
     );
   }
-
-  void getFullProductInfo(int index) {
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (context) => Dialog(
-        child: Container(
-          alignment: Alignment.center,
-
-          // width: MediaQuery.of(context).size.width - 20,
-          // height: MediaQuery.of(context).size.height - 20,
-          padding: const EdgeInsets.all(10),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(
-              Radius.circular(30),
-            ),
-          ),
-          child: Column(
-            children: [
-              Text(
-                'Lịch sử trạng thái',
-                style: TextStyle(
-                  color: Colors.blue.shade200,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 26,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: Center(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      dataToTextFieldWithLable(
-                          'ID',
-                          dataFormat(
-                              jsonDataState!['data'][index]['id'].toString()),
-                          true,
-                          context),
-
-                      dataToTextFieldWithLable(
-                          'ID sản phẩm',
-                          dataFormat(jsonDataState!['data'][index]
-                                  ['san_pham_id']
-                              .toString()),
-                          true,
-                          context),
-                      dataToTextFieldWithLable(
-                          'Trạng thái sản phẩm',
-                          dataFormat(
-                              jsonDataState!['data'][index]['trang_thai']),
-                          true,
-                          context),
-                      dataToTextFieldWithLable(
-                          'Thời gian thay đổi trạng thái',
-                          dataFormat(jsonDataState!['data'][index]['created']
-                              .toString()),
-                          true,
-                          context),
-                      dataToTextFieldWithLable(
-                          'ID người dùng tác động',
-                          dataFormat(jsonDataState!['data'][index]['user_id']
-                              .toString()),
-                          true,
-                          context),
-                      dataToTextFieldWithLable(
-                          'Ghi chú',
-                          dataFormat(jsonDataState!['data'][index]['ghi_chu']),
-                          true,
-                          context),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     SizedBox(width: 5),
-                      //     SizedBox(
-                      //       width: 90,
-                      //       height: 45,
-                      //       child: customSizedButton(
-                      //           'Sửa', context, Icons.edit, Colors.green, 10, () {
-                      //         Navigator.of(context).pop();
-                      //         Navigator.of(context).push(
-                      //           MaterialPageRoute(
-                      //             builder: (context) => EditCustomerScreen(
-                      //               jsonData: jsonData,
-                      //               index: index,
-                      //             ),
-                      //           ),
-                      //         );
-                      //       }),
-                      //     ),
-                      //     SizedBox(
-                      //         width: 90,
-                      //         height: 45,
-                      //         child: customSizedButton(
-                      //             'Xóa', context, Icons.delete, Colors.red, 10,
-                      //             () {
-                      //           yesNoDialog('Thông báo',
-                      //               'Bạn có muốn xóa thông tin khách hàng không?',
-                      //               () {
-                      //             GetAPI(
-                      //                 'https://anphat.andin.io/index.php?r=restful-api/xoa-khach-hang',
-                      //                 context,
-                      //                 'POST', {
-                      //               'uid': userInfo!['id'].toString(),
-                      //               'auth': userInfo!['auth_key'].toString(),
-                      //               'id':
-                      //                   jsonData!['data'][index]['id'].toString(),
-                      //             }).then((Map<String, dynamic>? json) => ({
-                      //                   if (json != null)
-                      //                     {
-                      //                       notiDialog(
-                      //                           'Thông báo', json['message'],
-                      //                           () async {
-                      //                         var prefs = await SharedPreferences
-                      //                             .getInstance();
-                      //                         await prefs.setString('userInfo',
-                      //                             jsonEncode(json['data']));
-                      //                         Navigator.of(context).pop();
-                      //                         Navigator.of(context).pop();
-                      //                       }, context)
-                      //                     }
-                      //                 }));
-                      //           }, () => Navigator.of(context).pop(), context);
-                      //         })),
-                      //     SizedBox(width: 5),
-                      //     // IconButton(
-                      //     //   padding: EdgeInsets.only(right: 40),
-                      //     //   icon: Icon(
-                      //     //     Icons.delete,
-                      //     //     color: Colors.red,
-                      //     //   ),
-                      //     //   onPressed: () {},
-                      //     // )
-                      //   ],
-                      // )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // void searchFilterOptions() {
-  //   showDialog(
-  //     barrierDismissible: true,
-  //     context: context,
-  //     builder: (context) => Dialog(
-  //       child: Container(
-  //         alignment: Alignment.center,
-
-  //         // width: MediaQuery.of(context).size.width - 20,
-  //         // height: MediaQuery.of(context).size.height - 20,
-  //         padding: const EdgeInsets.all(10),
-  //         decoration: const BoxDecoration(
-  //           color: Colors.white,
-  //           borderRadius: BorderRadius.all(
-  //             Radius.circular(30),
-  //           ),
-  //         ),
-  //         child: Column(
-  //           children: [
-  //             Text(
-  //               'Lọc sản phẩm',
-  //               style: TextStyle(
-  //                 color: Colors.blue.shade200,
-  //                 fontWeight: FontWeight.bold,
-  //                 fontSize: 26,
-  //               ),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //             SizedBox(height: 10),
-  //             Expanded(
-  //               child: ListView(
-  //                 // mainAxisAlignment: MainAxisAlignment.center,
-  //                 // crossAxisAlignment: CrossAxisAlignment.end,
-  //                 children: [
-  //                   textFieldWithPrefixIcon('Từ ngày', Icons.date_range_rounded,
-  //                       'date', dateFromController, context),
-  //                   textFieldWithPrefixIcon(
-  //                       'Đến ngày',
-  //                       Icons.date_range_rounded,
-  //                       'date',
-  //                       dateToController,
-  //                       context),
-  //                   textFieldWithPrefixIcon('Địa chỉ', Icons.house_rounded,
-  //                       'text', addressController, context),
-  //                   textFieldWithPrefixIcon(
-  //                       'ID nhân viên phụ trách',
-  //                       Icons.person_outline_rounded,
-  //                       'text',
-  //                       idStaffInChargeController,
-  //                       context),
-  //                   textFieldWithPrefixIcon('ID nhân viên cập nhật',
-  //                       Icons.person, 'text', idUpdateStaffController, context),
-  //                   Row(
-  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                     children: [
-  //                       SizedBox(width: 5),
-  //                       SizedBox(
-  //                         width: 90,
-  //                         height: 45,
-  //                         child: customSizedButton(
-  //                           'Lưu',
-  //                           context,
-  //                           Icons.edit,
-  //                           Colors.green,
-  //                           10,
-  //                           () {
-  //                             Navigator.of(context).pop();
-  //                           },
-  //                         ),
-  //                       ),
-  //                       SizedBox(
-  //                           width: 90,
-  //                           height: 45,
-  //                           child: customSizedButton('Hủy', context,
-  //                               Icons.delete, Colors.red, 10, () {})),
-  //                       SizedBox(width: 5),
-  //                       // IconButton(
-  //                       //   padding: EdgeInsets.only(right: 40),
-  //                       //   icon: Icon(
-  //                       //     Icons.delete,
-  //                       //     color: Colors.red,
-  //                       //   ),
-  //                       //   onPressed: () {},
-  //                       // )
-  //                     ],
-  //                   )
-  //                 ],
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   List<Widget> productsSearchList() {
     List<Widget> fullProductsList = List<Widget>.generate(
@@ -533,6 +298,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
 
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
@@ -542,8 +308,21 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
               color: Colors.black,
             ),
           ),
-          iconTheme: IconThemeData(color: buttonPrimaryColorDeactive),
+          iconTheme: IconThemeData(
+            color: Colors.black,
+          ),
+          leading: Container(
+              padding: EdgeInsets.all(6),
+              child: Image.asset('lib/assets/images/main-logo.png')),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
+                icon: Icon(Icons.list))
+          ],
         ),
+        drawer: NavigationDrawerWidget(userInfo: userInfo),
         backgroundColor: const Color.fromARGB(255, 244, 242, 242),
         body: Container(
           padding: const EdgeInsets.all(20),
@@ -567,6 +346,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                               //     searchController.text == '') {
                               //   isLoadedAPI = false;
                               // }
+                              pageIndex = 1;
                               setState(() {});
                             },
                             controller: searchController,
@@ -578,7 +358,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                             decoration: InputDecoration(
                                 contentPadding:
                                     EdgeInsets.symmetric(vertical: 10),
-                                hintText: 'Tìm kiếm nhân viên',
+                                hintText: 'Tìm kiếm sản phẩm',
                                 prefixIcon: Icon(
                                   Icons.production_quantity_limits_rounded,
                                   color: themeColor,
@@ -621,7 +401,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                                 for (var pageItemIndex =
                                         (pageIndex - 1) * infoPerPage + index;
                                     pageItemIndex < infoPerPage * pageIndex &&
-                                        pageItemIndex < pageLimit;
+                                        pageItemIndex < itemPageLimit;
                                     pageItemIndex++) {
                                   return getDemoProductInfo(pageItemIndex);
                                 }
@@ -663,7 +443,9 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                     ),
                     IconButton(
                         onPressed: () {
-                          if (pageIndex < pageLimit / infoPerPage) pageIndex++;
+                          if (pageIndex < itemPageLimit / infoPerPage) {
+                            pageIndex++;
+                          }
                           setState(() {});
                         },
                         icon: Icon(Icons.arrow_forward_ios_rounded)),

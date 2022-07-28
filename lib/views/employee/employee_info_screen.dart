@@ -1,15 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: prefer_const_constructors, avoid_init_to_null, avoid_print
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../controller/ServicesController.dart';
 import '../../utils/buttons/text_button.dart';
 import '../../utils/color/theme.dart';
-import '../../utils/dialogs/dialog.dart';
 
 class EmployeeInfoScreen extends StatefulWidget {
   final Map<String, dynamic>? jsonData;
@@ -23,47 +17,49 @@ class EmployeeInfoScreen extends StatefulWidget {
 }
 
 class _EmployeeInfoScreenState extends State<EmployeeInfoScreen> {
-  String dataFormat(String? str) => (str == null || str == '') ? '' : str;
+  String dataFormat(String? str) =>
+      (str == null || str == '' || str == 'null') ? '' : str;
 
   Widget getFullproductInfo() {
     return ListView(
       children: [
-        dataToTextFieldWithLable(
+        SizedBox(height: 20),
+        dataToTextFieldWithLable2(
             'ID nhân viên',
             dataFormat(widget.jsonData!['data']['id'].toString()),
             true,
             context),
-        dataToTextFieldWithLable(
+        dataToTextFieldWithLable2(
             'Username',
             dataFormat(widget.jsonData!['data']['username'].toString()),
             true,
             context),
-        dataToTextFieldWithLable(
+        dataToTextFieldWithLable2(
             'Email',
             dataFormat(widget.jsonData!['data']['email'].toString()),
             true,
             context),
-        dataToTextFieldWithLable(
+        dataToTextFieldWithLable2(
             'Điện thoại',
             dataFormat(widget.jsonData!['data']['dien_thoai'].toString()),
             true,
             context),
-        dataToTextFieldWithLable(
+        dataToTextFieldWithLable2(
             'Họ tên',
             dataFormat(widget.jsonData!['data']['hoten'].toString()),
             true,
             context),
-        dataToTextFieldWithLable(
+        dataToTextFieldWithLable2(
             'CMND',
             dataFormat(widget.jsonData!['data']['cmnd'].toString()),
             true,
             context),
-        dataToTextFieldWithLable(
+        dataToTextFieldWithLable2(
             'Địa chỉ',
             dataFormat(widget.jsonData!['data']['dia_chi'].toString()),
             true,
             context),
-        dataToTextFieldWithLable(
+        dataToTextFieldWithLable2(
             'Ngày sinh',
             dataFormat(widget.jsonData!['data']['ngay_sinh'].toString()),
             true,
@@ -80,7 +76,7 @@ class _EmployeeInfoScreenState extends State<EmployeeInfoScreen> {
         centerTitle: true,
         backgroundColor: Theme.of(context).backgroundColor,
         title: Text(
-          'Thông tin chi tiết sản phẩm',
+          'Thông tin chi tiết nhân viên',
           style: TextStyle(
             color: Colors.black,
           ),

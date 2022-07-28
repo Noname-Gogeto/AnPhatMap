@@ -149,15 +149,16 @@ Widget functinalButton(
           )));
 }
 
-Widget dataToTextFieldWithLable(
+Widget dataToTextFieldWithLableInDialog(
     String label, String value, bool readOnly, BuildContext context,
     {String? inputType = 'text', TextEditingController? textController}) {
   return Container(
-    padding: const EdgeInsets.only(top: 10, bottom: 10),
+    // padding: const EdgeInsets.only(top: 10, bottom: 10),
+    // padding: const EdgeInsets.only(top: 10),
     // width: MediaQuery.of(context).size.width,
     // decoration: const BoxDecoration(
     //     border: Border(bottom: BorderSide(color: Colors.grey))),
-    margin: const EdgeInsets.only(bottom: 10),
+    margin: const EdgeInsets.only(bottom: 5, top: 5),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -185,19 +186,89 @@ Widget dataToTextFieldWithLable(
 
             enableInteractiveSelection: false,
             decoration: InputDecoration(
-              // label: label,
-
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               filled: true,
               labelText: label,
-              labelStyle:
-                  TextStyle(color: buttonPrimaryColorActive, fontSize: 24),
+              labelStyle: TextStyle(color: themeColor, fontSize: 13),
               hintText: value,
               hintStyle: TextStyle(color: Colors.black, fontSize: 18),
               floatingLabelBehavior: FloatingLabelBehavior.always,
               border: OutlineInputBorder(
                 // borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
               ),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: buttonPrimaryColorDeactive),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: buttonPrimaryColorDeactive),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              fillColor: Color.fromRGBO(250, 250, 250, 1),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget dataToTextFieldWithLable2(
+    String label, String value, bool readOnly, BuildContext context,
+    {String? inputType = 'text', TextEditingController? textController}) {
+  return Container(
+    // padding: const EdgeInsets.only(top: 10, bottom: 10),
+    // width: MediaQuery.of(context).size.width,
+    // decoration: const BoxDecoration(
+    //     border: Border(bottom: BorderSide(color: Colors.grey))),
+    margin: const EdgeInsets.only(bottom: 5, top: 5),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width - 20,
+          child: TextFormField(
+            onTap: inputType == 'date'
+                ? () {
+                    DatePicker.showDatePicker(context,
+                        showTitleActions: true,
+                        minTime: DateTime(1900, 3, 5),
+                        maxTime: DateTime.now(), onChanged: (date) {
+                      print('change $date');
+                    }, onConfirm: (date) {
+                      textController!.text =
+                          DateFormat('dd/MM/yyyy').format(date);
+                    }, currentTime: DateTime.now(), locale: LocaleType.vi);
+                  }
+                : () {},
+            controller: textController,
+            readOnly: readOnly,
+            minLines: 1,
+            maxLines: 5,
+            // cursorColor: componentPrimaryColor,
+
+            enableInteractiveSelection: false,
+            decoration: InputDecoration(
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              filled: true,
+              labelText: label,
+              labelStyle:
+                  TextStyle(color: buttonPrimaryColorActive, fontSize: 13),
+              hintText: value,
+              hintStyle: TextStyle(color: Colors.black, fontSize: 14),
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              border: OutlineInputBorder(
+                // borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: themeColor),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: themeColor),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              fillColor: Color.fromRGBO(250, 250, 250, 1),
             ),
           ),
         ),

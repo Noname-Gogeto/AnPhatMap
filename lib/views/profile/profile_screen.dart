@@ -1,11 +1,9 @@
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/material/scaffold.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:rcore/views/layouts/layout2.dart';
 
 class ProfileScreenHihi extends StatefulWidget {
   ProfileScreenHihi({Key? key}) : super(key: key);
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   State<ProfileScreenHihi> createState() => _ProfileScreenHihiState();
 }

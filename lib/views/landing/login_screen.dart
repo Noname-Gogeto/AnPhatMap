@@ -2,8 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:rcore/controller/ServicesController.dart';
 import 'package:rcore/utils/buttons/button.dart';
@@ -12,10 +10,8 @@ import 'package:rcore/utils/dialogs/dialog.dart';
 import 'package:rcore/utils/text_input/text_input.dart';
 import 'package:rcore/views/landing/forgotpassword_screen.dart';
 import 'package:rcore/views/landing/signup_screen.dart';
-import 'package:rcore/views/map/map_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/buttons/text_button.dart';
-import '../../utils/text_input/checkbox.dart';
 import '../customers/customers_screen.dart';
 
 class LoginScreen extends StatefulWidget {
