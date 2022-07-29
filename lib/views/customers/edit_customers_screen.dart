@@ -10,8 +10,9 @@ import 'package:rcore/controller/ServicesController.dart';
 import 'package:rcore/utils/buttons/button.dart';
 import 'package:rcore/utils/color/theme.dart';
 import 'package:rcore/utils/dialogs/dialog.dart';
-import 'package:rcore/utils/text_input/text_input.dart';
 import 'package:rcore/views/landing/login_screen.dart';
+
+import '../../utils/buttons/text_button.dart';
 
 class EditCustomerScreen extends StatefulWidget {
   final int? uid;
@@ -49,15 +50,22 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
   @override
   void initState() {
     idController.text = '';
-    fullNameController.text = '';
-    emailController.text = '';
-    phoneNumberController.text = '';
+    fullNameController.text =
+        dataFormat(widget.jsonData!['data'][widget.index]['hoten']);
+    emailController.text =
+        dataFormat(widget.jsonData!['data'][widget.index]['email']);
+    phoneNumberController.text =
+        dataFormat(widget.jsonData!['data'][widget.index]['dien_thoai']);
     birthdayController.text = '';
-    addressController.text = '';
+    addressController.text =
+        dataFormat(widget.jsonData!['data'][widget.index]['dia_chi']);
   }
 
-  String dataFormat(String? str, String showStr) =>
-      (str == null || str == '') ? showStr : str;
+  // String dataFormat(String? str, String showStr) =>
+  //     (str == null || str == '' || str == 'null') ? showStr : str;
+
+  String dataFormat(String? str) =>
+      (str == null || str == '' || str == 'null') ? '' : str;
 
   @override
   Widget build(BuildContext context) {
@@ -85,44 +93,44 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: 30),
-                  textFieldWithPrefixIcon(
-                      dataFormat(
-                          widget.jsonData!['data'][widget.index]['hoten'],
-                          'Họ tên'),
-                      Icons.person,
-                      'text',
-                      fullNameController,
-                      context),
-                  textFieldWithPrefixIcon(
-                      dataFormat(
-                          widget.jsonData!['data'][widget.index]['email'],
-                          'Email'),
-                      Icons.email,
-                      'text',
-                      emailController,
-                      context),
-                  textFieldWithPrefixIcon(
-                      dataFormat(
-                          widget.jsonData!['data'][widget.index]['dien_thoai'],
-                          'Số điện thoại'),
-                      Icons.phone,
-                      'text',
-                      phoneNumberController,
-                      context),
-                  textFieldWithPrefixIcon(
-                      'Ngày sinh',
-                      Icons.date_range_outlined,
-                      'date',
-                      birthdayController,
-                      context),
-                  textFieldWithPrefixIcon(
-                      dataFormat(
-                          widget.jsonData!['data'][widget.index]['dia_chi'],
-                          'Địa chỉ'),
-                      Icons.home_rounded,
-                      'text',
-                      addressController,
-                      context),
+                  // textFieldWithPrefixIcon(
+                  //     dataFormat(
+                  //         widget.widget.jsonData!['data'][widget.index]['hoten'],
+                  //        'Họ tên'),
+                  //     Icons.person,
+                  //     'text',
+                  //     fullNameController,
+                  //     context),
+                  // textFieldWithPrefixIcon(
+                  //     dataFormat(
+                  //         widget.widget.jsonData!['data'][widget.index]['email'],
+                  //         'Email'),
+                  //     Icons.email,
+                  //     'text',
+                  //     emailController,
+                  //     context),
+                  // textFieldWithPrefixIcon(
+                  //     dataFormat(
+                  //         widget.widget.jsonData!['data'][widget.index]['dien_thoai'],
+                  //         'Số điện thoại'),
+                  //     Icons.phone,
+                  //     'text',
+                  //     phoneNumberController,
+                  //     context),
+                  // textFieldWithPrefixIcon(
+                  //     'Ngày sinh',
+                  //     Icons.date_range_outlined,
+                  //     'date',
+                  //     birthdayController,
+                  //     context),
+                  // textFieldWithPrefixIcon(
+                  //     dataFormat(
+                  //         widget.widget.jsonData!['data'][widget.index]['dia_chi'],
+                  //         'Địa chỉ'),
+                  //     Icons.home_rounded,
+                  //     'text',
+                  //     addressController,
+                  //     context),
                   // textFieldWithPrefixIcon(
                   //     'Nhu cầu quận',
                   //     Icons.holiday_village_rounded,
@@ -156,39 +164,237 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
                   // textFieldWithPrefixIcon('Ghi chú', Icons.note_add_rounded,
                   //     'text', noteController, context),
 
-                  primarySizedButton(
-                    'Cập nhật',
+                  dataToTextFieldWithLable2(
+                    'Họ tên',
+                    dataFormat(widget.jsonData!['data'][widget.index]['hoten']),
+                    false,
                     context,
-                    () {
-                      GetAPI(
-                          'https://anphat.andin.io/index.php?r=restful-api/edit-khach-hang',
-                          context,
-                          'POST', {
-                        'uid': widget.uid,
-                        'auth': widget.auth,
-                        'id': widget.jsonData!['data'][widget.index]['id'],
-                        'hoTen': fullNameController.text,
-                        'dienThoai': phoneNumberController.text,
-                        'email': emailController.text,
-                        'ngay_sinh': birthdayController.text,
-                        'dia_chi': addressController.text,
-                      }).then((Map<String, dynamic>? json) => ({
-                            if (json != null)
-                              {
-                                notiDialog('Thông báo', json['message'],
-                                    () async {
-                                  var prefs =
-                                      await SharedPreferences.getInstance();
-                                  await prefs.setString(
-                                      'userInfo', jsonEncode(json['data']));
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginScreen()));
-                                }, context)
-                              }
-                          }));
-                    },
+                    textController: fullNameController,
                   ),
+                  dataToTextFieldWithLable2(
+                    'Phone',
+                    dataFormat(
+                        widget.jsonData!['data'][widget.index]['dien_thoai']),
+                    false,
+                    context,
+                    textController: phoneNumberController,
+                  ),
+                  dataToTextFieldWithLable2(
+                    'Email',
+                    dataFormat(widget.jsonData!['data'][widget.index]['email']),
+                    false,
+                    context,
+                    textController: emailController,
+                  ),
+                  dataToTextFieldWithLable2(
+                    'Ngày sinh',
+                    birthdayController.text,
+                    false,
+                    context,
+                    inputType: 'date',
+                    textController: birthdayController,
+                  ),
+                  dataToTextFieldWithLable2(
+                    'Address',
+                    dataFormat(
+                        widget.jsonData!['data'][widget.index]['dia_chi']),
+                    false,
+                    context,
+                    textController: addressController,
+                  ),
+                  dataToTextFieldWithLable2(
+                      'Nhu cầu quận',
+                      dataFormat(widget.jsonData!['data'][widget.index]
+                          ['nhu_cau_quan']),
+                      true,
+                      context),
+                  dataToTextFieldWithLable2(
+                      'Nhu cầu hướng',
+                      dataFormat(widget.jsonData!['data'][widget.index]
+                          ['nhu_cau_huong']),
+                      true,
+                      context),
+                  dataToTextFieldWithLable2(
+                      'Giá từ',
+                      dataFormat(widget.jsonData!['data'][widget.index]
+                              ['nhu_cau_gia_tu']
+                          .toString()),
+                      true,
+                      context),
+                  dataToTextFieldWithLable2(
+                      'Giá đến',
+                      dataFormat(widget.jsonData!['data'][widget.index]
+                              ['nhu_cau_gia_den']
+                          .toString()),
+                      true,
+                      context),
+                  dataToTextFieldWithLable2(
+                      'Khoảng giá',
+                      dataFormat(widget.jsonData!['data'][widget.index]
+                              ['khoang_gia']
+                          .toString()),
+                      true,
+                      context),
+                  dataToTextFieldWithLable2(
+                      'Diện tích tối thiểu',
+                      dataFormat(widget.jsonData!['data'][widget.index]
+                              ['nhu_cau_dien_tich_tu']
+                          .toString()),
+                      true,
+                      context),
+                  dataToTextFieldWithLable2(
+                      'Diện tích tối đa',
+                      dataFormat(widget.jsonData!['data'][widget.index]
+                              ['nhu_cau_dien_tich_den']
+                          .toString()),
+                      true,
+                      context),
+                  dataToTextFieldWithLable2(
+                      'Ghi chú',
+                      dataFormat(
+                          widget.jsonData!['data'][widget.index]['ghi_chu']),
+                      true,
+                      context),
+                  // primarySizedButton(
+                  //   'Cập nhật',
+                  //   context,
+                  //   () {
+                  //     GetAPI(
+                  //         'https://anphat.andin.io/index.php?r=restful-api/edit-khach-hang',
+                  //         context,
+                  //         'POST', {
+                  //       'uid': widget.uid.toString(),
+                  //       'auth': widget.auth,
+                  //       'id': widget.jsonData!['data'][widget.index]['id']
+                  //           .toString(),
+                  //       'hoTen': fullNameController.text,
+                  //       'dienThoai': phoneNumberController.text,
+                  //       'email': emailController.text,
+                  //       'ngaySinh': birthdayController.text,
+                  //       'diaChi': addressController.text,
+                  //     }).then((Map<String, dynamic>? json) => ({
+                  //           if (json != null)
+                  //             {
+                  //               notiDialog('Thông báo', json['message'],
+                  //                   () async {
+                  //                 var prefs =
+                  //                     await SharedPreferences.getInstance();
+                  //                 await prefs.setString(
+                  //                     'userInfo', jsonEncode(json['data']));
+                  //                 Navigator.of(context).pushReplacement(
+                  //                     MaterialPageRoute(
+                  //                         builder: (context) => LoginScreen()));
+                  //               }, context)
+                  //             }
+                  //         }));
+                  //   },
+                  // ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 20,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // SizedBox(width: 5),
+                        SizedBox(
+                          // padding: EdgeInsets.only(left: 5),
+                          // alignment: Alignment.centerLeft,
+                          width: MediaQuery.of(context).size.width -
+                              (20 + 40 + 10),
+                          height: 40,
+                          child: customSizedButton(
+                            'Sửa',
+                            context,
+                            Icons.edit,
+                            Colors.green,
+                            10,
+                            () {
+                              GetAPI(
+                                  'https://anphat.andin.io/index.php?r=restful-api/edit-khach-hang',
+                                  context,
+                                  'POST', {
+                                'uid': widget.uid.toString(),
+                                'auth': widget.auth,
+                                'id': widget.jsonData!['data'][widget.index]
+                                        ['id']
+                                    .toString(),
+                                'hoTen': fullNameController.text,
+                                'dienThoai': phoneNumberController.text,
+                                'email': emailController.text,
+                                'ngaySinh': birthdayController.text,
+                                'diaChi': addressController.text,
+                              }).then((Map<String, dynamic>? json) => ({
+                                    if (json != null)
+                                      {
+                                        notiDialog('Thông báo', json['message'],
+                                            () async {
+                                          var prefs = await SharedPreferences
+                                              .getInstance();
+                                          await prefs.setString('userInfo',
+                                              jsonEncode(json['data']));
+                                          Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen()));
+                                        }, context)
+                                      }
+                                  }));
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              yesNoDialog('Thông báo',
+                                  'Bạn có muốn xóa thông tin khách hàng không?',
+                                  () {
+                                GetAPI(
+                                    'https://anphat.andin.io/index.php?r=restful-api/xoa-khach-hang',
+                                    context,
+                                    'POST', {
+                                  'uid': widget.uid.toString(),
+                                  'auth': widget.auth,
+                                  'id': widget.jsonData!['data'][widget.index]
+                                          ['id']
+                                      .toString(),
+                                }).then((Map<String, dynamic>? json) => ({
+                                      if (json != null)
+                                        {
+                                          notiDialog(
+                                              'Thông báo', json['message'],
+                                              () async {
+                                            var prefs = await SharedPreferences
+                                                .getInstance();
+                                            await prefs.setString('userInfo',
+                                                jsonEncode(json['data']));
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                          }, context)
+                                        }
+                                    }));
+                              }, () => Navigator.of(context).pop(), context);
+                            },
+                            style: ButtonStyle(
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      EdgeInsets.all(8.5)),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  buttonPrimaryColorText),
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(Colors.red),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      side: BorderSide(color: Colors.red))),
+                            ),
+                            child: Icon(Icons.delete),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ],

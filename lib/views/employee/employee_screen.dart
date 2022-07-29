@@ -111,7 +111,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
   Widget textIconBetween(IconData icon, Color iconColor, String value,
       {bool? isValueBool = false}) {
     return Container(
-      padding: const EdgeInsets.only(left: 5, right: 5, bottom: 3),
+      padding: const EdgeInsets.only(left: 5, right: 5, top: 3, bottom: 3),
       width: MediaQuery.of(context).size.width - (60 + 60),
       // decoration: const BoxDecoration(
       //     border: Border(bottom: BorderSide(color: Colors.grey))),
@@ -193,7 +193,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
               Column(
                 children: [
                   SizedBox(
-                    width: 40,
+                    width: 45,
                     height: 45,
                     child: IconButton(
                       icon: Icon(

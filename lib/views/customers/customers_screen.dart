@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print, avoid_init_to_null, prefer_const_constructors, use_build_context_synchronously
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:rcore/utils/color/theme.dart';
 import 'package:rcore/utils/dialogs/dialog.dart';
 
@@ -32,7 +31,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
   bool isLoadedAPI = false;
   // int index = 0;
   TextEditingController searchController = TextEditingController();
-  //* Default info
+
+  //* Default page info change when API loaded
   int pageIndex = 1;
   int pageMaxSize = 78;
   int infoPerPage = 20;
@@ -70,7 +70,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
             }
         }),
       );
-      if (jsonData != null) pageMaxSize = jsonData!['so_trang'];
     }
     if (searchController.text != '' && isLoadedData) {
       await GetAPI(
@@ -153,8 +152,20 @@ class _CustomerScreenState extends State<CustomerScreen> {
           borderRadius: BorderRadius.circular(10),
         ),
         child: TextButton(
+          // onPressed: () {
+          //   getFullCustomerInfo(index);
+          // },
           onPressed: () {
-            getFullCustomerInfo(index);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditCustomerScreen(
+                  uid: userInfo!['id'],
+                  auth: userInfo!['auth_key'].toString(),
+                  jsonData: jsonData,
+                  index: index,
+                ),
+              ),
+            );
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -215,178 +226,197 @@ class _CustomerScreenState extends State<CustomerScreen> {
     showDialog(
       barrierDismissible: true,
       context: context,
-      builder: (context) => Dialog(
-        child: Container(
-          alignment: Alignment.center,
-
-          // width: MediaQuery.of(context).size.width - 20,
-          // height: MediaQuery.of(context).size.height - 20,
-          padding: const EdgeInsets.all(10),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(
-              Radius.circular(30),
+      builder: (context) => StatefulBuilder(builder: (context, setState) {
+        return Dialog(
+          child: Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width - 20,
+            height: MediaQuery.of(context).size.height * 0.9,
+            padding: const EdgeInsets.all(10),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(30),
+              ),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Thông tin khách hàng',
+                  style: TextStyle(
+                    color: textColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 10),
+                Expanded(
+                  child: ListView(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      dataToTextFieldWithLableInDialog(
+                          'Email',
+                          dataFormat(jsonData!['data'][index]['email']),
+                          true,
+                          context),
+                      dataToTextFieldWithLableInDialog(
+                          'Phone',
+                          dataFormat(jsonData!['data'][index]['dien_thoai']),
+                          true,
+                          context),
+                      dataToTextFieldWithLableInDialog(
+                          'Address',
+                          dataFormat(jsonData!['data'][index]['dia_chi']),
+                          true,
+                          context),
+                      dataToTextFieldWithLableInDialog(
+                          'Nhu cầu quận',
+                          dataFormat(jsonData!['data'][index]['nhu_cau_quan']),
+                          true,
+                          context),
+                      dataToTextFieldWithLableInDialog(
+                          'Nhu cầu hướng',
+                          dataFormat(jsonData!['data'][index]['nhu_cau_huong']),
+                          true,
+                          context),
+                      dataToTextFieldWithLableInDialog(
+                          'Giá từ',
+                          dataFormat(jsonData!['data'][index]['nhu_cau_gia_tu']
+                              .toString()),
+                          true,
+                          context),
+                      dataToTextFieldWithLableInDialog(
+                          'Giá đến',
+                          dataFormat(jsonData!['data'][index]['nhu_cau_gia_den']
+                              .toString()),
+                          true,
+                          context),
+                      dataToTextFieldWithLableInDialog(
+                          'Khoảng giá',
+                          dataFormat(jsonData!['data'][index]['khoang_gia']
+                              .toString()),
+                          true,
+                          context),
+                      dataToTextFieldWithLableInDialog(
+                          'Diện tích tối thiểu',
+                          dataFormat(jsonData!['data'][index]
+                                  ['nhu_cau_dien_tich_tu']
+                              .toString()),
+                          true,
+                          context),
+                      dataToTextFieldWithLableInDialog(
+                          'Diện tích tối đa',
+                          dataFormat(jsonData!['data'][index]
+                                  ['nhu_cau_dien_tich_den']
+                              .toString()),
+                          true,
+                          context),
+                      dataToTextFieldWithLableInDialog(
+                          'Ghi chú',
+                          dataFormat(jsonData!['data'][index]['ghi_chu']),
+                          true,
+                          context),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 100,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // SizedBox(width: 5),
+                            SizedBox(
+                              // padding: EdgeInsets.only(left: 5),
+                              // alignment: Alignment.centerLeft,
+                              width: MediaQuery.of(context).size.width -
+                                  (100 + 40 + 10),
+                              height: 40,
+                              child: customSizedButton(
+                                'Sửa',
+                                context,
+                                Icons.edit,
+                                Colors.green,
+                                10,
+                                () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => EditCustomerScreen(
+                                        uid: userInfo!['id'],
+                                        auth: userInfo!['auth_key'].toString(),
+                                        jsonData: jsonData,
+                                        index: index,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  yesNoDialog('Thông báo',
+                                      'Bạn có muốn xóa thông tin khách hàng không?',
+                                      () {
+                                    GetAPI(
+                                        'https://anphat.andin.io/index.php?r=restful-api/xoa-khach-hang',
+                                        context,
+                                        'POST', {
+                                      'uid': userInfo!['id'].toString(),
+                                      'auth': userInfo!['auth_key'].toString(),
+                                      'id': jsonData!['data'][index]['id']
+                                          .toString(),
+                                    }).then((Map<String, dynamic>? json) => ({
+                                          if (json != null)
+                                            {
+                                              notiDialog(
+                                                  'Thông báo', json['message'],
+                                                  () async {
+                                                var prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                await prefs.setString(
+                                                    'userInfo',
+                                                    jsonEncode(json['data']));
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              }, context)
+                                            }
+                                        }));
+                                  }, () => Navigator.of(context).pop(),
+                                      context);
+                                },
+                                style: ButtonStyle(
+                                  padding: MaterialStateProperty.all<
+                                      EdgeInsetsGeometry>(EdgeInsets.all(8.5)),
+                                  foregroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          buttonPrimaryColorText),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.red),
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          side: BorderSide(color: Colors.red))),
+                                ),
+                                child: Icon(Icons.delete),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          child: Column(
-            children: [
-              Text(
-                'Thông tin khách hàng',
-                style: TextStyle(
-                  color: Colors.blue.shade200,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: ListView(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  // crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    dataToTextFieldWithLableInDialog(
-                        'Email',
-                        dataFormat(jsonData!['data'][index]['email']),
-                        true,
-                        context),
-                    dataToTextFieldWithLableInDialog(
-                        'Phone',
-                        dataFormat(jsonData!['data'][index]['dien_thoai']),
-                        true,
-                        context),
-                    dataToTextFieldWithLableInDialog(
-                        'Address',
-                        dataFormat(jsonData!['data'][index]['dia_chi']),
-                        true,
-                        context),
-                    dataToTextFieldWithLableInDialog(
-                        'Nhu cầu quận',
-                        dataFormat(jsonData!['data'][index]['nhu_cau_quan']),
-                        true,
-                        context),
-                    dataToTextFieldWithLableInDialog(
-                        'Nhu cầu hướng',
-                        dataFormat(jsonData!['data'][index]['nhu_cau_huong']),
-                        true,
-                        context),
-                    dataToTextFieldWithLableInDialog(
-                        'Giá từ',
-                        dataFormat(jsonData!['data'][index]['nhu_cau_gia_tu']
-                            .toString()),
-                        true,
-                        context),
-                    dataToTextFieldWithLableInDialog(
-                        'Giá đến',
-                        dataFormat(jsonData!['data'][index]['nhu_cau_gia_den']
-                            .toString()),
-                        true,
-                        context),
-                    dataToTextFieldWithLableInDialog(
-                        'Khoảng giá',
-                        dataFormat(
-                            jsonData!['data'][index]['khoang_gia'].toString()),
-                        true,
-                        context),
-                    dataToTextFieldWithLableInDialog(
-                        'Diện tích tối thiểu',
-                        dataFormat(jsonData!['data'][index]
-                                ['nhu_cau_dien_tich_tu']
-                            .toString()),
-                        true,
-                        context),
-                    dataToTextFieldWithLableInDialog(
-                        'Diện tích tối đa',
-                        dataFormat(jsonData!['data'][index]
-                                ['nhu_cau_dien_tich_den']
-                            .toString()),
-                        true,
-                        context),
-                    dataToTextFieldWithLableInDialog(
-                        'Ghi chú',
-                        dataFormat(jsonData!['data'][index]['ghi_chu']),
-                        true,
-                        context),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // SizedBox(width: 5),
-                        Container(
-                          padding: EdgeInsets.only(left: 5),
-                          width: MediaQuery.of(context).size.width * 0.7 * 0.75,
-                          height: 40,
-                          child: customSizedButton(
-                              'Sửa', context, Icons.edit, Colors.green, 10, () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => EditCustomerScreen(
-                                  jsonData: jsonData,
-                                  index: index,
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                        IconButton(
-                          padding: EdgeInsets.only(right: 5),
-                          alignment: Alignment.centerRight,
-                          onPressed: () {
-                            yesNoDialog('Thông báo',
-                                'Bạn có muốn xóa thông tin khách hàng không?',
-                                () {
-                              GetAPI(
-                                  'https://anphat.andin.io/index.php?r=restful-api/xoa-khach-hang',
-                                  context,
-                                  'POST', {
-                                'uid': userInfo!['id'].toString(),
-                                'auth': userInfo!['auth_key'].toString(),
-                                'id': jsonData!['data'][index]['id'].toString(),
-                              }).then((Map<String, dynamic>? json) => ({
-                                    if (json != null)
-                                      {
-                                        notiDialog('Thông báo', json['message'],
-                                            () async {
-                                          var prefs = await SharedPreferences
-                                              .getInstance();
-                                          await prefs.setString('userInfo',
-                                              jsonEncode(json['data']));
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context).pop();
-                                        }, context)
-                                      }
-                                  }));
-                            }, () => Navigator.of(context).pop(), context);
-                          },
-                          icon: Icon(
-                            Icons.delete_forever_rounded,
-                            color: Colors.red,
-                          ),
-                        ),
-                        // Container(
-                        //   // padding: EdgeInsets.only(right: 5),
-                        //   // alignment: Alignment.centerRight,
-                        //   width: MediaQuery.of(context).size.width * 0.7 * 0.25,
-                        //   height: 45,
-                        //   child:
-                        // ),
-                        // IconButton(
-                        //   padding: EdgeInsets.only(right: 40),
-                        //   icon: Icon(
-                        //     Icons.delete,
-                        //     color: Colors.red,
-                        //   ),
-                        //   onPressed: () {},
-                        // )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
@@ -394,7 +424,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
   //*
   //* Args:
   //*   str (String): The string to be formatted.
-  String dataFormat(String? str) => (str == null || str == '') ? '' : str;
+  String dataFormat(String? str) =>
+      (str == null || str == '' || str == 'null') ? '' : str;
 
   @override
   Widget build(BuildContext context) {
@@ -491,7 +522,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           //   }
                           //   return Container();
                           // },
-                          ((index) => getDemoUserInfo(index))),
+                          (index) => getDemoUserInfo(index)),
                 ),
               ),
               SizedBox(
@@ -501,12 +532,16 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
-                        onPressed: () {
-                          isLoadedAPI = false;
-                          if (pageIndex > 1) pageIndex--;
-                          setState(() {});
-                        },
-                        icon: Icon(Icons.arrow_back_ios_new_rounded)),
+                      onPressed: () {
+                        isLoadedAPI = false;
+                        if (pageIndex > 1) pageIndex--;
+                        setState(() {});
+                      },
+                      icon: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: (pageIndex > 1) ? textColor : Colors.transparent,
+                      ),
+                    ),
                     SizedBox(
                       height: 40,
                       width: 40,
@@ -527,13 +562,17 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       ),
                     ),
                     IconButton(
-                        onPressed: () {
-                          // if (pageIndex < pageLimit / infoPerPage) pageIndex++;
-                          isLoadedAPI = false;
-                          if (pageIndex < pageMaxSize) pageIndex++;
-                          setState(() {});
-                        },
-                        icon: Icon(Icons.arrow_forward_ios_rounded)),
+                      onPressed: () {
+                        // if (pageIndex < pageLimit / infoPerPage) pageIndex++;
+                        isLoadedAPI = false;
+                        if (pageIndex < pageMaxSize) pageIndex++;
+                        setState(() {});
+                      },
+                      icon: Icon(Icons.arrow_forward_ios_rounded),
+                      color: (pageIndex < pageMaxSize)
+                          ? textColor
+                          : Colors.transparent,
+                    ),
                   ],
                 ),
               ),

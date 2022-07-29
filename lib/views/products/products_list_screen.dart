@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, avoid_init_to_null, prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
+// ignore_for_file: avoid_print, avoid_init_to_null, prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations, use_build_context_synchronously
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -28,9 +28,11 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   Map<String, dynamic>? productSearchList = null;
   bool isLoadedData = false;
   bool isLoadedAPI = false;
+
+  //* Default page info change when API loaded
   int pageIndex = 1;
-  int itemPageLimit = 32;
-  int infoPerPage = 8;
+  int pageMaxSize = 31;
+  int infoPerPage = 32;
 
   // TextEditingController dateFromController = TextEditingController();
   // TextEditingController dateToController = TextEditingController();
@@ -40,67 +42,64 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   TextEditingController searchController = TextEditingController();
 
   /// If the data is loaded and the API is not loaded, then load the API
-  void getDataProduct() {
-    try {
-      if (!isLoadedData) {
-        SharedPreferences.getInstance().then((prefs) => ({
-              print("BEFORE: $userInfo"),
-              print("DATA: ${prefs.getString('userInfo')}"),
-              userInfo = jsonDecode(prefs.getString('userInfo')!),
-              print("TEMP: $userInfo"),
+  Future<void> getDataProduct() async {
+    if (!isLoadedData) {
+      SharedPreferences.getInstance().then((prefs) => ({
+            print("BEFORE: $userInfo"),
+            print("DATA: ${prefs.getString('userInfo')}"),
+            userInfo = jsonDecode(prefs.getString('userInfo')!),
+            print("TEMP: $userInfo"),
+            setState(() {
+              isLoadedData = true;
+            }),
+          }));
+    }
+    if (isLoadedData && searchController.text == '' && !isLoadedAPI) {
+      await GetAPI(
+          'https://anphat.andin.io/index.php?r=restful-api/get-data-san-pham',
+          context,
+          'POST', {
+        'uid': userInfo!['id'].toString(),
+        'auth': userInfo!['auth_key'].toString(),
+        'page': pageIndex.toString(),
+      }).then(
+        (Map<String, dynamic>? json) => ({
+          if (json != null)
+            {
               setState(() {
-                isLoadedData = true;
-              }),
-            }));
-      }
-      if (isLoadedData && searchController.text == '' && !isLoadedAPI) {
-        GetAPI(
-            'https://anphat.andin.io/index.php?r=restful-api/get-data-san-pham',
-            context,
-            'POST', {
-          'uid': userInfo!['id'].toString(),
-          'auth': userInfo!['auth_key'].toString(),
-        }).then(
-          (Map<String, dynamic>? json) => ({
-            if (json != null)
-              {
-                setState(() {
-                  jsonData = json;
-                  isLoadedAPI = true;
-                })
-              }
-          }),
-        );
-      }
-      // isLoadedData ||
-      //     dateFromController.text != '' ||
-      //     dateToController.text != '' ||
-      //     addressController.text != '' ||
-      //     idStaffInChargeController.text != '' ||
-      if (searchController.text != '') {
-        GetAPI(
-            'https://anphat.andin.io/index.php?r=restful-api/get-data-san-pham',
-            context,
-            'POST', {
-          'uid': userInfo!['id'].toString(),
-          'auth': userInfo!['auth_key'].toString(),
-          'tuKhoa_VT': searchController.text,
-          // 'trangThai': true,
-        }).then(
-          (Map<String, dynamic>? json) => ({
-            if (json != null)
-              {
-                setState(() {
-                  jsonData = json;
-                  isLoadedAPI = false;
-                })
-              }
-          }),
-        );
-      }
-    } catch (e) {
-      notiDialog(
-          'Lỗi', e.toString(), () => Navigator.of(context).pop(), context);
+                jsonData = json;
+                isLoadedAPI = true;
+              })
+            }
+        }),
+      );
+    }
+    if (searchController.text != '' && isLoadedData) {
+      await GetAPI(
+          'https://anphat.andin.io/index.php?r=restful-api/get-data-san-pham',
+          context,
+          'POST', {
+        'uid': userInfo!['id'].toString(),
+        'auth': userInfo!['auth_key'].toString(),
+        'tuKhoa_VT': searchController.text,
+        'page': pageIndex.toString(),
+        // 'trangThai': true,
+      }).then(
+        (Map<String, dynamic>? json) => ({
+          if (json != null)
+            {
+              setState(() {
+                jsonData = json;
+                isLoadedAPI = false;
+              })
+            }
+        }),
+      );
+    }
+    if (jsonData != null) {
+      pageMaxSize = jsonData!['sotrang'];
+      List<dynamic> info = jsonData!['content'];
+      infoPerPage = info.length;
     }
   }
 
@@ -169,8 +168,8 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
               Column(
                 children: [
                   Container(
-                    padding:
-                        const EdgeInsets.only(left: 10, right: 5, bottom: 3),
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 5, top: 5, bottom: 3),
                     width: MediaQuery.of(context).size.width - (60 + 60),
                     child: Text(
                         dataFormat(jsonData!['content'][index]['ngay_tao']),
@@ -397,16 +396,17 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                           ? []
                           : List<Widget>.generate(
                               infoPerPage,
-                              (index) {
-                                for (var pageItemIndex =
-                                        (pageIndex - 1) * infoPerPage + index;
-                                    pageItemIndex < infoPerPage * pageIndex &&
-                                        pageItemIndex < itemPageLimit;
-                                    pageItemIndex++) {
-                                  return getDemoProductInfo(pageItemIndex);
-                                }
-                                return Container();
-                              },
+                              // (index) {
+                              //   for (var pageItemIndex =
+                              //           (pageIndex - 1) * infoPerPage + index;
+                              //       pageItemIndex < infoPerPage * pageIndex &&
+                              //           pageItemIndex < pageMaxSize;
+                              //       pageItemIndex++) {
+                              //     return getDemoProductInfo(pageItemIndex);
+                              //   }
+                              //   return Container();
+                              // },
+                              (index) => getDemoProductInfo(index),
                             ),
                 ),
               ),
@@ -417,11 +417,14 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
-                        onPressed: () {
-                          if (pageIndex > 1) pageIndex--;
-                          setState(() {});
-                        },
-                        icon: Icon(Icons.arrow_back_ios_new_rounded)),
+                      onPressed: () {
+                        isLoadedAPI = false;
+                        if (pageIndex > 1) pageIndex--;
+                        setState(() {});
+                      },
+                      icon: Icon(Icons.arrow_back_ios_new_rounded),
+                      color: (pageIndex > 1) ? textColor : Colors.transparent,
+                    ),
                     SizedBox(
                       height: 40,
                       width: 40,
@@ -442,13 +445,18 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                       ),
                     ),
                     IconButton(
-                        onPressed: () {
-                          if (pageIndex < itemPageLimit / infoPerPage) {
-                            pageIndex++;
-                          }
-                          setState(() {});
-                        },
-                        icon: Icon(Icons.arrow_forward_ios_rounded)),
+                      onPressed: () {
+                        isLoadedAPI = false;
+                        if (pageIndex < pageMaxSize) {
+                          pageIndex++;
+                        }
+                        setState(() {});
+                      },
+                      icon: Icon(Icons.arrow_forward_ios_rounded),
+                      color: (pageIndex < pageMaxSize)
+                          ? textColor
+                          : Colors.transparent,
+                    ),
                   ],
                 ),
               ),

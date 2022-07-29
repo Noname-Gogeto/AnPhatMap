@@ -34,8 +34,8 @@ class _DetailsProductsListScreenState extends State<DetailsProductsListScreen> {
         // elevation: MediaQuery.of(context).size.height - 500,
         child: Container(
           alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width - 20,
-          height: MediaQuery.of(context).size.height - 300,
+          // width: MediaQuery.of(context).size.width - 20,
+          height: MediaQuery.of(context).size.height * 0.5,
           padding: const EdgeInsets.all(10),
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -48,56 +48,52 @@ class _DetailsProductsListScreenState extends State<DetailsProductsListScreen> {
               Text(
                 'Lịch sử trạng thái',
                 style: TextStyle(
-                  color: Colors.blue.shade200,
+                  color: textColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 22,
                 ),
                 textAlign: TextAlign.center,
               ),
-              // SizedBox(height: 10),
+              SizedBox(height: 10),
               Expanded(
-                child: Center(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      dataToTextFieldWithLableInDialog(
-                          'ID',
-                          dataFormat(
-                              jsonDataState!['data'][index]['id'].toString()),
-                          true,
-                          context),
-                      dataToTextFieldWithLableInDialog(
-                          'ID sản phẩm',
-                          dataFormat(jsonDataState!['data'][index]
-                                  ['san_pham_id']
-                              .toString()),
-                          true,
-                          context),
-                      dataToTextFieldWithLableInDialog(
-                          'Trạng thái sản phẩm',
-                          dataFormat(
-                              jsonDataState!['data'][index]['trang_thai']),
-                          true,
-                          context),
-                      dataToTextFieldWithLableInDialog(
-                          'Thời gian thay đổi trạng thái',
-                          dataFormat(jsonDataState!['data'][index]['created']
-                              .toString()),
-                          true,
-                          context),
-                      dataToTextFieldWithLableInDialog(
-                          'ID người dùng tác động',
-                          dataFormat(jsonDataState!['data'][index]['user_id']
-                              .toString()),
-                          true,
-                          context),
-                      dataToTextFieldWithLableInDialog(
-                          'Ghi chú',
-                          dataFormat(jsonDataState!['data'][index]['ghi_chu']),
-                          true,
-                          context),
-                    ],
-                  ),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    dataToTextFieldWithLableInDialog(
+                        'ID',
+                        dataFormat(
+                            jsonDataState!['data'][index]['id'].toString()),
+                        true,
+                        context),
+                    dataToTextFieldWithLableInDialog(
+                        'ID sản phẩm',
+                        dataFormat(jsonDataState!['data'][index]['san_pham_id']
+                            .toString()),
+                        true,
+                        context),
+                    dataToTextFieldWithLableInDialog(
+                        'Trạng thái sản phẩm',
+                        dataFormat(jsonDataState!['data'][index]['trang_thai']),
+                        true,
+                        context),
+                    dataToTextFieldWithLableInDialog(
+                        'Thời gian thay đổi trạng thái',
+                        dataFormat(jsonDataState!['data'][index]['created']
+                            .toString()),
+                        true,
+                        context),
+                    dataToTextFieldWithLableInDialog(
+                        'ID người dùng tác động',
+                        dataFormat(jsonDataState!['data'][index]['user_id']
+                            .toString()),
+                        true,
+                        context),
+                    dataToTextFieldWithLableInDialog(
+                        'Ghi chú',
+                        dataFormat(jsonDataState!['data'][index]['ghi_chu']),
+                        true,
+                        context),
+                  ],
                 ),
               ),
             ],

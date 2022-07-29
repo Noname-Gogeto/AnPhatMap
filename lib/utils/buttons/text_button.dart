@@ -155,7 +155,7 @@ Widget dataToTextFieldWithLableInDialog(
   return Container(
     // padding: const EdgeInsets.only(top: 10, bottom: 10),
     // padding: const EdgeInsets.only(top: 10),
-    // width: MediaQuery.of(context).size.width,
+    width: MediaQuery.of(context).size.width - 100,
     // decoration: const BoxDecoration(
     //     border: Border(bottom: BorderSide(color: Colors.grey))),
     margin: const EdgeInsets.only(bottom: 5, top: 5),
@@ -163,7 +163,7 @@ Widget dataToTextFieldWithLableInDialog(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.7,
+          width: MediaQuery.of(context).size.width - 100,
           child: TextFormField(
             onTap: inputType == 'date'
                 ? () {
