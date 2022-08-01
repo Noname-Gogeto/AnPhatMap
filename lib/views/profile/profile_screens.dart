@@ -4,15 +4,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rcore/utils/color/theme.dart';
-import 'package:rcore/views/landing/login_screen.dart';
 import 'package:rcore/views/landing/password_change.dart';
 import 'package:rcore/views/profile/edit_profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../controller/ServicesController.dart';
 import '../../utils/buttons/button.dart';
-import '../../utils/dialogs/dialog.dart';
-import '../../utils/items/profile.dart';
-import '../../utils/text_input/text_input.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -51,10 +46,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           Text('$label:',
               style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
           Text(value,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 13,
               )),
         ],
       ),
@@ -67,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       color: const Color.fromARGB(255, 244, 242, 242),
       // color: themeColor,
       child: Container(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.white,
@@ -75,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             width: 1.0,
           ),
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: twoTextBetween(lable, value),
       ),
@@ -113,6 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'Thông tin cá nhân',
             style: TextStyle(
               color: Colors.black,
+              fontSize: 20,
             ),
           ),
           iconTheme: IconThemeData(color: buttonPrimaryColorDeactive),
@@ -127,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ? []
                 : [
                     SizedBox(
-                      height: 150,
+                      height: 125,
                       child: CircleAvatar(
                         radius: 24,
                         backgroundColor: const Color.fromRGBO(255, 217, 0, 1),
@@ -167,6 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 )));
                       },
                     ),
+                    SizedBox(height: 10),
                   ],
           ),
         ),

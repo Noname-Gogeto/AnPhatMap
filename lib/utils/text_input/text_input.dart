@@ -281,3 +281,43 @@ Widget textFieldWithPlaceholder(
         ],
       ));
 }
+
+Widget textIconBetween(
+    IconData icon, Color iconColor, String value, BuildContext context,
+    {bool? isValueBool = false}) {
+  return Container(
+    padding: const EdgeInsets.all(1.5),
+    width: MediaQuery.of(context).size.width - (60 + 60),
+    // decoration: const BoxDecoration(
+    //     border: Border(bottom: BorderSide(color: Colors.grey))),
+    // margin: const EdgeInsets.only(bottom: 10),
+    child: Row(
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
+
+      children: [
+        // Text('$label:',
+        //     style:
+        //         const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        Icon(icon, color: iconColor, size: 25),
+        SizedBox(width: 5),
+        Flexible(
+          child: Text(
+            value,
+            // textAlign: TextAlign.center,
+            // overflow: TextOverflow.ellipsis,
+            // maxLines: 2,
+            // softWrap: false,
+            overflow: TextOverflow.clip,
+            style: TextStyle(
+              fontSize: 13,
+              color: iconColor,
+              fontWeight:
+                  (isValueBool == true) ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}

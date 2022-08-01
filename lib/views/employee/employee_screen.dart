@@ -6,9 +6,9 @@ import 'package:rcore/utils/dialogs/dialog.dart';
 import 'package:rcore/views/employee/employee_info_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../controller/ServicesController.dart';
-import '../../utils/buttons/text_button.dart';
 import '../../utils/color/theme.dart';
 import '../../utils/drawer/navigation_drawer_widget.dart';
+import '../../utils/text_input/text_input.dart';
 
 class EmployeeListScreen extends StatefulWidget {
   const EmployeeListScreen({Key? key}) : super(key: key);
@@ -108,49 +108,6 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
     }
   }
 
-  Widget textIconBetween(IconData icon, Color iconColor, String value,
-      {bool? isValueBool = false}) {
-    return Container(
-      padding: const EdgeInsets.only(left: 5, right: 5, top: 3, bottom: 3),
-      width: MediaQuery.of(context).size.width - (60 + 60),
-      // decoration: const BoxDecoration(
-      //     border: Border(bottom: BorderSide(color: Colors.grey))),
-      // margin: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisAlignment: MainAxisAlignment.start,
-
-        children: [
-          // Text('$label:',
-          //     style:
-          //         const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          Icon(
-            icon,
-            color: iconColor,
-            size: 14,
-          ),
-          SizedBox(width: 5),
-          Flexible(
-            child: Text(
-              value,
-              // textAlign: TextAlign.center,
-              // overflow: TextOverflow.ellipsis,
-              // maxLines: 2,
-              // softWrap: false,
-              overflow: TextOverflow.clip,
-              style: TextStyle(
-                fontSize: 14,
-                color: iconColor,
-                fontWeight:
-                    (isValueBool == true) ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget getEmployeeInfo(int index) {
     return Container(
       padding: const EdgeInsets.only(bottom: 10),
@@ -176,14 +133,23 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
             children: [
               Column(
                 children: [
-                  textIconBetween(Icons.perm_identity, Colors.black,
+                  textIconBetween(
+                      Icons.perm_identity,
+                      Colors.black,
                       dataFormat(jsonData!['data'][index]['id'].toString()),
+                      context,
                       isValueBool: true),
-                  textIconBetween(Icons.person, Colors.black,
+                  textIconBetween(
+                      Icons.person,
+                      Colors.black,
                       dataFormat(jsonData!['data'][index]['hoten'].toString()),
+                      context,
                       isValueBool: true),
-                  textIconBetween(Icons.phone, Colors.green,
-                      dataFormat(jsonData!['data'][index]['dien_thoai'])),
+                  textIconBetween(
+                      Icons.phone,
+                      Colors.green,
+                      dataFormat(jsonData!['data'][index]['dien_thoai']),
+                      context),
                 ],
               ),
               // IconButton(
@@ -284,6 +250,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
             'Thông tin nhân viên',
             style: TextStyle(
               color: Colors.black,
+              fontSize: 20,
             ),
           ),
           iconTheme: IconThemeData(

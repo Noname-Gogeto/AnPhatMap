@@ -48,6 +48,7 @@ class _CustomSelect2State extends State<CustomSelect2> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
                 hintText: widget.hint,
+                hintStyle: TextStyle(fontSize: 13),
                 prefixIcon: Icon(
                   Icons.search,
                   color: themeColor,
@@ -75,11 +76,12 @@ class _CustomSelect2State extends State<CustomSelect2> {
 Widget selectTwoNhaLam(String label,
     List<DropdownMenuItem<Map<String, dynamic>>> items, BuildContext context) {
   return Container(
-    margin: EdgeInsets.only(bottom: 15),
+    margin: EdgeInsets.only(bottom: 5, top: 5),
+    // margin: EdgeInsets.only(bottom: 15),
     height: 60,
     decoration: BoxDecoration(
         color: Color.fromRGBO(250, 250, 250, 1),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
         border: Border.all(color: themeColor)),
     child: TextButton(
       onPressed: () {
@@ -93,11 +95,12 @@ Widget selectTwoNhaLam(String label,
       },
       child: Container(
         height: 55,
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.only(left: 5, right: 10),
         width: MediaQuery.of(context).size.width,
         child: Align(
           alignment: Alignment.centerLeft,
-          child: Text(label, style: TextStyle(color: Colors.black)),
+          child:
+              Text(label, style: TextStyle(color: Colors.black, fontSize: 13)),
         ),
       ),
     ),

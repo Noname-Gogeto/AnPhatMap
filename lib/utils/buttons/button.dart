@@ -51,7 +51,7 @@ Widget customSizedButton(String text, BuildContext context, IconData icon,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon),
-            Text(' $text'),
+            Text(' $text', style: TextStyle(fontSize: 13)),
           ],
         ),
         onPressed: function,

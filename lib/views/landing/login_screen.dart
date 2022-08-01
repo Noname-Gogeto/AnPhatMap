@@ -82,6 +82,7 @@ class _LoginScreen extends State<LoginScreen> {
                           var prefs = await SharedPreferences.getInstance();
                           await prefs.setString(
                               'userInfo', jsonEncode(json['data']));
+                          Navigator.pop(context);
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) => CustomerScreen()));

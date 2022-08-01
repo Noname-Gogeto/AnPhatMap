@@ -165,6 +165,7 @@ Widget dataToTextFieldWithLableInDialog(
         SizedBox(
           width: MediaQuery.of(context).size.width - 100,
           child: TextFormField(
+            style: TextStyle(fontSize: 13),
             onTap: inputType == 'date'
                 ? () {
                     DatePicker.showDatePicker(context,
@@ -192,18 +193,18 @@ Widget dataToTextFieldWithLableInDialog(
               labelText: label,
               labelStyle: TextStyle(color: themeColor, fontSize: 13),
               hintText: value,
-              hintStyle: TextStyle(color: Colors.black, fontSize: 18),
+              hintStyle: TextStyle(color: Colors.black, fontSize: 13),
               floatingLabelBehavior: FloatingLabelBehavior.always,
               border: OutlineInputBorder(
                 // borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(5),
               ),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: buttonPrimaryColorDeactive),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: buttonPrimaryColorDeactive),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
               fillColor: Color.fromRGBO(250, 250, 250, 1),
             ),
           ),
@@ -215,12 +216,21 @@ Widget dataToTextFieldWithLableInDialog(
 
 Widget dataToTextFieldWithLable2(
     String label, String value, bool readOnly, BuildContext context,
-    {String? inputType = 'text', TextEditingController? textController}) {
+    {String? inputType = 'text',
+    TextEditingController? textController,
+    bool? highContrast = false}) {
+  TextInputType keyboardInputType = TextInputType.text;
+  switch (inputType) {
+    case 'password':
+      keyboardInputType = TextInputType.visiblePassword;
+      break;
+    case 'number':
+      keyboardInputType = TextInputType.number;
+      break;
+    default:
+      break;
+  }
   return Container(
-    // padding: const EdgeInsets.only(top: 10, bottom: 10),
-    // width: MediaQuery.of(context).size.width,
-    // decoration: const BoxDecoration(
-    //     border: Border(bottom: BorderSide(color: Colors.grey))),
     margin: const EdgeInsets.only(bottom: 5, top: 5),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -228,6 +238,7 @@ Widget dataToTextFieldWithLable2(
         SizedBox(
           width: MediaQuery.of(context).size.width - 20,
           child: TextFormField(
+            style: TextStyle(fontSize: 13),
             onTap: inputType == 'date'
                 ? () {
                     DatePicker.showDatePicker(context,
@@ -243,32 +254,36 @@ Widget dataToTextFieldWithLable2(
                 : () {},
             controller: textController,
             readOnly: readOnly,
+            keyboardType: keyboardInputType,
             minLines: 1,
             maxLines: 5,
             // cursorColor: componentPrimaryColor,
 
             enableInteractiveSelection: false,
             decoration: InputDecoration(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
               filled: true,
               labelText: label,
               labelStyle:
                   TextStyle(color: buttonPrimaryColorActive, fontSize: 13),
               hintText: value,
-              hintStyle: TextStyle(color: Colors.black, fontSize: 14),
+              hintStyle: TextStyle(color: Colors.black, fontSize: 13),
               floatingLabelBehavior: FloatingLabelBehavior.always,
               border: OutlineInputBorder(
                 // borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(5),
               ),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: themeColor),
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: themeColor),
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
-              fillColor: Color.fromRGBO(250, 250, 250, 1),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              fillColor: highContrast == true
+                  ? Color.fromRGBO(250, 250, 250, 1)
+                  : readOnly
+                      ? Colors.transparent
+                      : Color.fromRGBO(250, 250, 250, 1),
             ),
           ),
         ),

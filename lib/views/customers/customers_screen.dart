@@ -10,6 +10,7 @@ import '../../utils/buttons/button.dart';
 import '../../utils/buttons/text_button.dart';
 import '../../utils/drawer/navigation_drawer_widget.dart';
 
+import '../../utils/text_input/text_input.dart';
 import 'edit_customers_screen.dart';
 
 class CustomerScreen extends StatefulWidget {
@@ -99,42 +100,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
     }
   }
 
-  Widget twoTextBetween(IconData icon, Color iconColor, String value) {
-    return Container(
-      padding: const EdgeInsets.all(5),
-      width: MediaQuery.of(context).size.width - (60 + 60),
-      // decoration: const BoxDecoration(
-      //     border: Border(bottom: BorderSide(color: Colors.grey))),
-      // margin: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisAlignment: MainAxisAlignment.start,
-
-        children: [
-          // Text('$label:',
-          //     style:
-          //         const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          Icon(icon, color: iconColor, size: 14),
-          SizedBox(width: 5),
-          Flexible(
-            child: Text(
-              value,
-              // textAlign: TextAlign.center,
-              // overflow: TextOverflow.ellipsis,
-              // maxLines: 2,
-              // softWrap: false,
-              overflow: TextOverflow.clip,
-              style: TextStyle(
-                fontSize: 14,
-                color: iconColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget getDemoUserInfo(int index) {
     return Container(
       padding: const EdgeInsets.only(bottom: 10),
@@ -149,7 +114,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
             width: 1.0,
           ),
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: TextButton(
           // onPressed: () {
@@ -172,12 +137,15 @@ class _CustomerScreenState extends State<CustomerScreen> {
             children: [
               Column(
                 children: [
-                  twoTextBetween(Icons.person, Colors.black,
-                      dataFormat(jsonData!['data'][index]['hoten'])),
-                  twoTextBetween(Icons.phone, Colors.green,
-                      dataFormat(jsonData!['data'][index]['dien_thoai'])),
-                  twoTextBetween(Icons.home, themeColor,
-                      dataFormat(jsonData!['data'][index]['dia_chi'])),
+                  textIconBetween(Icons.person, Colors.black,
+                      dataFormat(jsonData!['data'][index]['hoten']), context),
+                  textIconBetween(
+                      Icons.phone,
+                      Colors.green,
+                      dataFormat(jsonData!['data'][index]['dien_thoai']),
+                      context),
+                  textIconBetween(Icons.home, themeColor,
+                      dataFormat(jsonData!['data'][index]['dia_chi']), context),
                 ],
               ),
               // IconButton(
@@ -189,8 +157,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   SizedBox(
                     width: 40,
                     height: 40,
-                    // child: customSizedButton('Gọi điện', context, Icons.phone,
-                    //     Colors.green, 10, () {}),
                     child: IconButton(
                       icon: Icon(
                         Icons.phone,
@@ -199,12 +165,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       onPressed: () {},
                     ),
                   ),
-                  // SizedBox(height: 5),
                   SizedBox(
                     width: 40,
                     height: 40,
-                    // child: customSizedButton('Nhắn tin', context, Icons.message,
-                    //     Colors.blue, 10, () {}),
                     child: IconButton(
                       icon: Icon(
                         Icons.message,
@@ -282,13 +245,13 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           true,
                           context),
                       dataToTextFieldWithLableInDialog(
-                          'Giá từ',
+                          'Nhu cầu giá từ',
                           dataFormat(jsonData!['data'][index]['nhu_cau_gia_tu']
                               .toString()),
                           true,
                           context),
                       dataToTextFieldWithLableInDialog(
-                          'Giá đến',
+                          'Nhu cầu giá đến',
                           dataFormat(jsonData!['data'][index]['nhu_cau_gia_den']
                               .toString()),
                           true,
@@ -437,7 +400,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
         appBar: AppBar(
           centerTitle: true,
           title: Text('Thông tin khách hàng',
-              style: TextStyle(color: Colors.black)),
+              style: TextStyle(color: Colors.black, fontSize: 20)),
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(
             color: Colors.black, // <-- SEE HERE
@@ -478,6 +441,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(vertical: 10),
                       hintText: 'Tìm kiếm khách hàng',
+                      hintStyle: TextStyle(fontSize: 16),
                       prefixIcon: Icon(
                         Icons.people_outlined,
                         color: themeColor,

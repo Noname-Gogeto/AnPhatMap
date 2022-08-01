@@ -32,7 +32,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
   TextEditingController moneyProduct = TextEditingController();
   TextEditingController idSeller = TextEditingController();
   TextEditingController dateSeller = TextEditingController();
-  TextEditingController sellerType = TextEditingController();
+  // TextEditingController sellerType = TextEditingController();
   TextEditingController stateProduct = TextEditingController();
   String indexSellType = 'Nhân viên';
   String indexStateProduct = 'Đã bán';
@@ -53,10 +53,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
   @override
   // ignore: must_call_super
   void initState() {
-    moneyProduct.text = '0';
-    idSeller.text = '0';
-    sellerType.text = 'Nhân viên';
-    stateProduct.text = 'Đã bán';
+    // moneyProduct.text = '0';
+    // idSeller.text = '0';
+    stateProduct.text = 'Trạng thái';
   }
 
   String dataFormat(String? str) => (str == null || str == '') ? '' : str;
@@ -94,8 +93,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
       return Container(
         padding: EdgeInsets.only(left: 10, right: 10),
         child: SizedBox(
-          // padding: EdgeInsets.only(left: 50, right: 50, bottom: 10),
-          width: MediaQuery.of(context).size.width * 0.7,
+          height: 65,
           // child: DropdownButtonFormField(
           //   decoration: InputDecoration(
           //     labelText: 'ID nguời bán',
@@ -132,6 +130,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                           onPressed: () {
                             setState(() {
                               selectedItem = jsonData!['data'][index];
+                              idSeller.text = selectedItem!['id'].toString();
                             });
                             Navigator.pop(context);
                           },
@@ -151,7 +150,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
     return ListView(
       children: [
         SizedBox(
-          height: 30,
+          height: 20,
         ),
         dataToTextFieldWithLable2(
           'ID sản phẩm',
@@ -160,7 +159,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
           context,
         ),
         Container(
-          height: 75,
+          height: 65,
           padding: EdgeInsets.only(left: 10, right: 10),
           child: selectTwoNhaLam(
             selectedSellerItems == null
@@ -241,12 +240,12 @@ class _SellProductScreenState extends State<SellProductScreen> {
         ),
         dataToTextFieldWithLable2(
             'Số tiền bán', moneyProduct.text, false, context,
-            textController: moneyProduct),
+            inputType: 'number', textController: moneyProduct),
         moneyTypePeople(selectedSellerItems!['type']),
         dataToTextFieldWithLable2('Ngày bán', '', false, context,
             inputType: 'date', textController: dateSeller),
         Container(
-          height: 75,
+          height: 65,
           padding: EdgeInsets.only(left: 10, right: 10),
           child: selectTwoNhaLam(
               selectedStateItems == null
@@ -315,37 +314,47 @@ class _SellProductScreenState extends State<SellProductScreen> {
           //   },
           // ),
         ),
+        SizedBox(height: 5),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(width: 5),
+            // SizedBox(width: 5),
             SizedBox(
-              width: 90,
+              width: MediaQuery.of(context).size.width - 20,
               height: 45,
-              child: customSizedButton(
-                  'Bán', context, Icons.sell_rounded, Colors.green, 10, () {
-                GetAPI(
-                    'https://anphat.andin.io/index.php?r=restful-api/ban-hang',
-                    context,
-                    'POST', {
-                  'uid': widget.userInfo!['id'].toString(),
-                  'auth': widget.userInfo!['auth_key'].toString(),
-                  'san_pham_id':
-                      widget.jsonData!['content'][index]['id'].toString(),
-                  'kieu_nguoi_ban': selectedSellerItems!['type'],
-                  'so_tien': moneyProduct.text,
-                  'ngay_ban': dateSeller.text,
-                  'nguoi_ban_id': idSeller.text,
-                  'trang_thai': stateProduct.text,
-                }).then((Map<String, dynamic>? json) => ({
-                      if (json != null)
-                        {
-                          notiDialog('Thông báo', json['message'], () async {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          }, context)
-                        }
-                    }));
+              child: customSizedButton('Bán', context, Icons.sell_rounded,
+                  buttonPrimaryColorActive, 10, () {
+                if (moneyProduct.text == '' ||
+                    selectedStateItems!['type'] == 'Trạng thái' ||
+                    selectedSellerItems!['type'] == 'Kiểu người bán') {
+                  notiDialog("Thông báo", 'Xin vui lòng nhập đầy đủ thông tin',
+                      () async {
+                    Navigator.of(context).pop();
+                  }, context);
+                } else {
+                  GetAPI(
+                      'https://anphat.andin.io/index.php?r=restful-api/ban-hang',
+                      context,
+                      'POST', {
+                    'uid': widget.userInfo!['id'].toString(),
+                    'auth': widget.userInfo!['auth_key'].toString(),
+                    'san_pham_id':
+                        widget.jsonData!['content'][index]['id'].toString(),
+                    'kieu_nguoi_ban': selectedSellerItems!['type'],
+                    'so_tien': moneyProduct.text,
+                    'ngay_ban': dateSeller.text,
+                    'nguoi_ban_id': idSeller.text,
+                    'trang_thai': selectedStateItems!['type'],
+                  }).then((Map<String, dynamic>? json) => ({
+                        if (json != null)
+                          {
+                            notiDialog('Thông báo', json['message'], () async {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                            }, context)
+                          }
+                      }));
+                }
               }),
             ),
             // SizedBox(

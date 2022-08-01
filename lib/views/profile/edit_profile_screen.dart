@@ -31,10 +31,11 @@ class _EditProfileScreen extends State<EditProfileScreen> {
 
   @override
   void initState() {
+    super.initState();
     fullNameController.text = widget.userInfo!['hoten'];
     emailController.text = widget.userInfo!['email'];
-    phoneNumberController.text = widget.userInfo!['dien_thoai'];
-    birthdayController.text = widget.userInfo!['ngay_sinh'];
+    phoneNumberController.text = widget.userInfo!['dien_thoai'].toString();
+    birthdayController.text = widget.userInfo!['ngay_sinh'].toString();
     addressController.text = widget.userInfo!['dia_chi'];
   }
 
@@ -103,7 +104,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                           'https://anphat.andin.io/index.php?r=restful-api/edit-thong-tin',
                           context,
                           'POST', {
-                        'uid': widget.userInfo!['id'],
+                        'uid': widget.userInfo!['id'].toString(),
                         'auth': widget.userInfo!['auth_key'],
                         'hoTen': fullNameController.text,
                         'dienThoai': phoneNumberController.text,

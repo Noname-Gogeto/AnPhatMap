@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rcore/utils/color/theme.dart';
-import 'package:rcore/utils/dialogs/dialog.dart';
 import 'package:rcore/views/products/details_products_list_screen.dart';
 import 'package:rcore/views/products/products_screen.dart';
+import 'package:rcore/views/products/sell_products_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../controller/ServicesController.dart';
 
@@ -111,7 +111,11 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(icon, color: iconColor),
+          Icon(
+            icon,
+            color: iconColor,
+            size: 25,
+          ),
           SizedBox(width: 3),
           Flexible(
             child: Text(
@@ -122,7 +126,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
               // softWrap: false,
               overflow: TextOverflow.clip,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 13,
                 color: iconColor,
                 fontWeight:
                     (isValueBool == true) ? FontWeight.bold : FontWeight.normal,
@@ -148,7 +152,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
             width: 1.0,
           ),
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: TextButton(
           onPressed: () {
@@ -173,7 +177,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                     width: MediaQuery.of(context).size.width - (60 + 60),
                     child: Text(
                         dataFormat(jsonData!['content'][index]['ngay_tao']),
-                        style: TextStyle(color: Colors.grey)),
+                        style: TextStyle(color: Colors.grey, fontSize: 13)),
                   ),
                   Container(
                     padding:
@@ -182,41 +186,59 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Icon(Icons.person, color: themeColor),
+                        Icon(
+                          Icons.person,
+                          color: themeColor,
+                          size: 25,
+                        ),
                         SizedBox(width: 3),
                         Flexible(
                           child: Text(
                             '${jsonData!['content'][index]['chu_nha']}',
                             overflow: TextOverflow.clip,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 13,
                               color: themeColor,
                             ),
                           ),
                         ),
                         SizedBox(width: 5),
-                        SizedBox(
-                          width: 5,
-                          child: Text(
-                            '-',
-                            style: TextStyle(color: themeColor),
-                          ),
-                        ),
-                        Icon(
-                          Icons.phone,
-                          color: Colors.green,
-                        ),
+                        dataFormat(jsonData!['content'][index]
+                                    ['dien_thoai_chu_nha']) !=
+                                ''
+                            ? (SizedBox(
+                                width: 5,
+                                child: Text(
+                                  '-',
+                                  style: TextStyle(
+                                      color: themeColor, fontSize: 13),
+                                ),
+                              ))
+                            : SizedBox(height: 0, width: 0),
+                        dataFormat(jsonData!['content'][index]
+                                    ['dien_thoai_chu_nha']) !=
+                                ''
+                            ? (Icon(
+                                Icons.phone,
+                                color: Colors.green,
+                                size: 25,
+                              ))
+                            : SizedBox(height: 0, width: 0),
                         SizedBox(width: 3),
-                        Flexible(
-                          child: Text(
-                            '${dataFormat(jsonData!['content'][index]['dien_thoai'])}',
-                            overflow: TextOverflow.clip,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: themeColor,
-                            ),
-                          ),
-                        ),
+                        dataFormat(jsonData!['content'][index]
+                                    ['dien_thoai_chu_nha']) !=
+                                ''
+                            ? (Flexible(
+                                child: Text(
+                                  '${dataFormat(jsonData!['content'][index]['dien_thoai_chu_nha'])}',
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: themeColor,
+                                  ),
+                                ),
+                              ))
+                            : SizedBox(height: 0, width: 0),
                       ],
                     ),
                   ),
@@ -243,7 +265,16 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => CreateProductScreen(),
+                          // builder: (context) => CreateProductScreen(
+                          //   jsonData: jsonData,
+                          //   productIndex: index,
+                          //   userInfo: userInfo,
+                          // ),
+                          builder: (context) => SellProductScreen(
+                            jsonData: jsonData,
+                            productIndex: index,
+                            userInfo: userInfo,
+                          ),
                         ),
                       );
                     },
@@ -305,6 +336,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
             'Thông tin sản phẩm',
             style: TextStyle(
               color: Colors.black,
+              fontSize: 20,
             ),
           ),
           iconTheme: IconThemeData(
@@ -358,6 +390,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                                 contentPadding:
                                     EdgeInsets.symmetric(vertical: 10),
                                 hintText: 'Tìm kiếm sản phẩm',
+                                hintStyle: TextStyle(fontSize: 16),
                                 prefixIcon: Icon(
                                   Icons.production_quantity_limits_rounded,
                                   color: themeColor,

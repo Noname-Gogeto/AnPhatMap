@@ -92,7 +92,7 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 30),
+                  SizedBox(height: 0),
                   // textFieldWithPrefixIcon(
                   //     dataFormat(
                   //         widget.widget.jsonData!['data'][widget.index]['hoten'],
@@ -202,93 +202,59 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
                     context,
                     textController: addressController,
                   ),
-                  dataToTextFieldWithLable2(
-                      'Nhu cầu quận',
-                      dataFormat(widget.jsonData!['data'][widget.index]
-                          ['nhu_cau_quan']),
-                      true,
-                      context),
-                  dataToTextFieldWithLable2(
-                      'Nhu cầu hướng',
-                      dataFormat(widget.jsonData!['data'][widget.index]
-                          ['nhu_cau_huong']),
-                      true,
-                      context),
-                  dataToTextFieldWithLable2(
-                      'Giá từ',
-                      dataFormat(widget.jsonData!['data'][widget.index]
-                              ['nhu_cau_gia_tu']
-                          .toString()),
-                      true,
-                      context),
-                  dataToTextFieldWithLable2(
-                      'Giá đến',
-                      dataFormat(widget.jsonData!['data'][widget.index]
-                              ['nhu_cau_gia_den']
-                          .toString()),
-                      true,
-                      context),
-                  dataToTextFieldWithLable2(
-                      'Khoảng giá',
-                      dataFormat(widget.jsonData!['data'][widget.index]
-                              ['khoang_gia']
-                          .toString()),
-                      true,
-                      context),
-                  dataToTextFieldWithLable2(
-                      'Diện tích tối thiểu',
-                      dataFormat(widget.jsonData!['data'][widget.index]
-                              ['nhu_cau_dien_tich_tu']
-                          .toString()),
-                      true,
-                      context),
-                  dataToTextFieldWithLable2(
-                      'Diện tích tối đa',
-                      dataFormat(widget.jsonData!['data'][widget.index]
-                              ['nhu_cau_dien_tich_den']
-                          .toString()),
-                      true,
-                      context),
-                  dataToTextFieldWithLable2(
-                      'Ghi chú',
-                      dataFormat(
-                          widget.jsonData!['data'][widget.index]['ghi_chu']),
-                      true,
-                      context),
-                  // primarySizedButton(
-                  //   'Cập nhật',
-                  //   context,
-                  //   () {
-                  //     GetAPI(
-                  //         'https://anphat.andin.io/index.php?r=restful-api/edit-khach-hang',
-                  //         context,
-                  //         'POST', {
-                  //       'uid': widget.uid.toString(),
-                  //       'auth': widget.auth,
-                  //       'id': widget.jsonData!['data'][widget.index]['id']
-                  //           .toString(),
-                  //       'hoTen': fullNameController.text,
-                  //       'dienThoai': phoneNumberController.text,
-                  //       'email': emailController.text,
-                  //       'ngaySinh': birthdayController.text,
-                  //       'diaChi': addressController.text,
-                  //     }).then((Map<String, dynamic>? json) => ({
-                  //           if (json != null)
-                  //             {
-                  //               notiDialog('Thông báo', json['message'],
-                  //                   () async {
-                  //                 var prefs =
-                  //                     await SharedPreferences.getInstance();
-                  //                 await prefs.setString(
-                  //                     'userInfo', jsonEncode(json['data']));
-                  //                 Navigator.of(context).pushReplacement(
-                  //                     MaterialPageRoute(
-                  //                         builder: (context) => LoginScreen()));
-                  //               }, context)
-                  //             }
-                  //         }));
-                  //   },
-                  // ),
+                  // dataToTextFieldWithLable2(
+                  //     'Nhu cầu quận',
+                  //     dataFormat(widget.jsonData!['data'][widget.index]
+                  //         ['nhu_cau_quan']),
+                  //     true,
+                  //     context),
+                  // dataToTextFieldWithLable2(
+                  //     'Nhu cầu hướng',
+                  //     dataFormat(widget.jsonData!['data'][widget.index]
+                  //         ['nhu_cau_huong']),
+                  //     true,
+                  //     context),
+                  // dataToTextFieldWithLable2(
+                  //     'Nhu cầu giá từ',
+                  //     dataFormat(widget.jsonData!['data'][widget.index]
+                  //             ['nhu_cau_gia_tu']
+                  //         .toString()),
+                  //     true,
+                  //     context),
+                  // dataToTextFieldWithLable2(
+                  //     'Nhu cầu giá đến',
+                  //     dataFormat(widget.jsonData!['data'][widget.index]
+                  //             ['nhu_cau_gia_den']
+                  //         .toString()),
+                  //     true,
+                  //     context),
+                  // dataToTextFieldWithLable2(
+                  //     'Khoảng giá',
+                  //     dataFormat(widget.jsonData!['data'][widget.index]
+                  //             ['khoang_gia']
+                  //         .toString()),
+                  //     true,
+                  //     context),
+                  // dataToTextFieldWithLable2(
+                  //     'Diện tích tối thiểu',
+                  //     dataFormat(widget.jsonData!['data'][widget.index]
+                  //             ['nhu_cau_dien_tich_tu']
+                  //         .toString()),
+                  //     true,
+                  //     context),
+                  // dataToTextFieldWithLable2(
+                  //     'Diện tích tối đa',
+                  //     dataFormat(widget.jsonData!['data'][widget.index]
+                  //             ['nhu_cau_dien_tich_den']
+                  //         .toString()),
+                  //     true,
+                  //     context),
+                  // dataToTextFieldWithLable2(
+                  //     'Ghi chú',
+                  //     dataFormat(
+                  //         widget.jsonData!['data'][widget.index]['ghi_chu']),
+                  //     true,
+                  //     context),
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 20,
                     child: Row(
@@ -331,10 +297,8 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
                                               .getInstance();
                                           await prefs.setString('userInfo',
                                               jsonEncode(json['data']));
-                                          Navigator.of(context).pushReplacement(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      LoginScreen()));
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
                                         }, context)
                                       }
                                   }));
@@ -386,7 +350,7 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(5),
                                       side: BorderSide(color: Colors.red))),
                             ),
                             child: Icon(Icons.delete),

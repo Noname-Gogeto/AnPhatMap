@@ -88,27 +88,27 @@ class NavigationDrawerWidget extends StatelessWidget {
                     active: activeName == 'employee',
                   ),
                   const Divider(color: Colors.black87),
-                  const SizedBox(height: 15),
-                  buildMenuItem(
-                    text: 'Thông báo',
-                    icon: Icons.notifications_active,
-                    // onClicked: () => selectedItem(context, 3),
-                    onClicked: () {},
-                  ),
-                  const SizedBox(height: 15),
-                  buildMenuItem(
-                    text: 'Cài đặt',
-                    icon: Icons.settings,
-                    // onClicked: () => selectedItem(context, 4),
-                    onClicked: () {},
-                  ),
-                  const SizedBox(height: 15),
-                  buildMenuItem(
-                    text: 'Giới thiệu',
-                    icon: Icons.info,
-                    // onClicked: () => selectedItem(context, 5),
-                    onClicked: () {},
-                  ),
+                  // const SizedBox(height: 15),
+                  // buildMenuItem(
+                  //   text: 'Thông báo',
+                  //   icon: Icons.notifications_active,
+                  //   // onClicked: () => selectedItem(context, 3),
+                  //   onClicked: () {},
+                  // ),
+                  // const SizedBox(height: 15),
+                  // buildMenuItem(
+                  //   text: 'Cài đặt',
+                  //   icon: Icons.settings,
+                  //   // onClicked: () => selectedItem(context, 4),
+                  //   onClicked: () {},
+                  // ),
+                  // const SizedBox(height: 15),
+                  // buildMenuItem(
+                  //   text: 'Giới thiệu',
+                  //   icon: Icons.info,
+                  //   // onClicked: () => selectedItem(context, 5),
+                  //   onClicked: () {},
+                  // ),
                   const SizedBox(height: 15),
                   buildMenuItem(
                     text: 'Đăng xuất',
@@ -151,40 +151,40 @@ class NavigationDrawerWidget extends StatelessWidget {
         color: Color.fromRGBO(255, 255, 255, 0.7),
       ),
       child: TextButton(
-        onPressed: () => selectedItem(context, 2),
+        // onPressed: () => selectedItem(context, 2),
+        onPressed: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => ProfileScreen())),
         child: Row(
           children: [
             CircleAvatar(radius: 30, backgroundImage: AssetImage(urlImage)),
             const SizedBox(width: 20),
             Container(
               height: 80,
+              width: MediaQuery.of(context).size.width * 0.42,
               padding: EdgeInsets.all(10),
               // margin: EdgeInsets.only(left: 20),
               decoration: BoxDecoration(
                 color: Color.fromRGBO(255, 255, 255, 0.8),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderRadius: BorderRadius.all(Radius.circular(5)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      userName,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: themeColor,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Text(
+                    userName,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: themeColor,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Align(
-                    alignment: Alignment.centerLeft,
+                  Flexible(
                     child: Text(
                       userEmail,
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 13,
                         color: themeColor,
                       ),
                     ),
@@ -213,7 +213,7 @@ class NavigationDrawerWidget extends StatelessWidget {
       VoidCallback? onClicked,
       bool active = false}) {
     const baseColor = Colors.black;
-    Color hoverColor = Colors.blue.shade400;
+    Color hoverColor = Color.fromARGB(255, 235, 238, 240);
 
     return ListTile(
       leading: Icon(icon, color: active ? themeColor : baseColor),
