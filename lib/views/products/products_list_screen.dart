@@ -141,7 +141,6 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   Widget getDemoProductInfo(int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
-
       color: const Color.fromARGB(255, 244, 242, 242),
       // color: themeColor,
       child: Container(
@@ -329,172 +328,175 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
     // pageLimit = jsonData != null ? jsonData!['so_trang'] : 1;
 
     return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Theme.of(context).backgroundColor,
-          title: Text(
-            'Thông tin sản phẩm',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            centerTitle: true,
+            backgroundColor: Theme.of(context).backgroundColor,
+            title: Text(
+              'Thông tin sản phẩm',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
             ),
+            iconTheme: IconThemeData(
+              color: Colors.black,
+            ),
+            leading: Container(
+                padding: EdgeInsets.all(6),
+                child: Image.asset('lib/assets/images/main-logo.png')),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    _scaffoldKey.currentState!.openDrawer();
+                  },
+                  icon: Icon(Icons.list))
+            ],
           ),
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
-          leading: Container(
-              padding: EdgeInsets.all(6),
-              child: Image.asset('lib/assets/images/main-logo.png')),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  _scaffoldKey.currentState!.openDrawer();
-                },
-                icon: Icon(Icons.list))
-          ],
-        ),
-        drawer: NavigationDrawerWidget(userInfo: userInfo),
-        // backgroundColor: const Color.fromARGB(255, 244, 242, 242),
-        backgroundColor: backgroundColor,
+          drawer: NavigationDrawerWidget(userInfo: userInfo),
+          // backgroundColor: const Color.fromARGB(255, 244, 242, 242),
+          backgroundColor: backgroundColor,
 
-        body: Container(
-          padding: const EdgeInsets.all(20),
-          color: backgroundColor,
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 15),
-                color: backgroundColor,
-                child: Column(
-                  children: [
-                    TextField(
-                      onChanged: (value) {
-                        // if (dateFromController.text == '' &&
-                        //     dateToController.text == '' &&
-                        //     addressController.text == '' &&
-                        //     idStaffInChargeController.text == '' &&
-                        //     idUpdateStaffController.text == '' &&
-                        //     searchController.text == '') {
-                        //   isLoadedAPI = false;
-                        // }
-                        pageIndex = 1;
-                        setState(() {});
-                      },
-                      controller: searchController,
-                      cursorColor: componentPrimaryColor,
-                      enableSuggestions: true,
-                      autocorrect: true,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 10),
-                          hintText: 'Tìm kiếm sản phẩm',
-                          hintStyle: TextStyle(fontSize: 16),
-                          prefixIcon: Icon(
-                            Icons.production_quantity_limits_rounded,
-                            color: themeColor,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(Icons.search),
-                            onPressed: () {
-                              print('Filter press');
-                              // searchFilterOptions();
-                              setState(() {});
-                            },
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: themeColor),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.transparent),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          fillColor: Color.fromRGBO(250, 250, 250, 1),
-                          filled: true),
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  children:
-                      jsonData == null // hiển thị dữ liệu duới dạng listview
-                          ? []
-                          : List<Widget>.generate(
-                              infoPerPage,
-                              // (index) {
-                              //   for (var pageItemIndex =
-                              //           (pageIndex - 1) * infoPerPage + index;
-                              //       pageItemIndex < infoPerPage * pageIndex &&
-                              //           pageItemIndex < pageMaxSize;
-                              //       pageItemIndex++) {
-                              //     return getDemoProductInfo(pageItemIndex);
-                              //   }
-                              //   return Container();
-                              // },
-                              (index) => getDemoProductInfo(index),
+          body: Container(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+            color: backgroundColor,
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(bottom: 15),
+                  color: backgroundColor,
+                  child: Column(
+                    children: [
+                      TextField(
+                        onChanged: (value) {
+                          // if (dateFromController.text == '' &&
+                          //     dateToController.text == '' &&
+                          //     addressController.text == '' &&
+                          //     idStaffInChargeController.text == '' &&
+                          //     idUpdateStaffController.text == '' &&
+                          //     searchController.text == '') {
+                          //   isLoadedAPI = false;
+                          // }
+                          pageIndex = 1;
+                          setState(() {});
+                        },
+                        controller: searchController,
+                        cursorColor: componentPrimaryColor,
+                        enableSuggestions: true,
+                        autocorrect: true,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 10),
+                            hintText: 'Tìm kiếm sản phẩm',
+                            hintStyle: TextStyle(fontSize: 16),
+                            prefixIcon: IconButton(
+                              icon: Icon(
+                                Icons.search,
+                                color: themeColor,
+                              ),
+                              onPressed: () {
+                                print('Filter press');
+                                // searchFilterOptions();
+                                setState(() {});
+                              },
                             ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: themeColor),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.transparent),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
+                            fillColor: Color.fromRGBO(240, 240, 240, 1),
+                            filled: true),
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 60,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        isLoadedAPI = false;
-                        if (pageIndex > 1) pageIndex--;
-                        setState(() {});
-                      },
-                      icon: Icon(Icons.arrow_back_ios_new_rounded),
-                      color: (pageIndex > 1) ? textColor : Colors.transparent,
-                    ),
-                    SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: Container(
+                Expanded(
+                  child: ListView(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    children:
+                        jsonData == null // hiển thị dữ liệu duới dạng listview
+                            ? []
+                            : List<Widget>.generate(
+                                infoPerPage,
+                                // (index) {
+                                //   for (var pageItemIndex =
+                                //           (pageIndex - 1) * infoPerPage + index;
+                                //       pageItemIndex < infoPerPage * pageIndex &&
+                                //           pageItemIndex < pageMaxSize;
+                                //       pageItemIndex++) {
+                                //     return getDemoProductInfo(pageItemIndex);
+                                //   }
+                                //   return Container();
+                                // },
+                                (index) => getDemoProductInfo(index),
+                              ),
+                  ),
+                ),
+                SizedBox(
+                  height: 60,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          isLoadedAPI = false;
+                          if (pageIndex > 1) pageIndex--;
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.arrow_back_ios_new_rounded),
+                        color: (pageIndex > 1) ? textColor : Colors.transparent,
+                      ),
+                      SizedBox(
                         height: 40,
                         width: 40,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: buttonPrimaryColorActive,
-                              style: BorderStyle.solid,
-                              width: 1.0,
-                            ),
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        child: Text('$pageIndex'),
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: buttonPrimaryColorActive,
+                                style: BorderStyle.solid,
+                                width: 1.0,
+                              ),
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          child: Text('$pageIndex'),
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        isLoadedAPI = false;
-                        if (pageIndex < pageMaxSize) {
-                          pageIndex++;
-                        }
-                        setState(() {});
-                      },
-                      icon: Icon(Icons.arrow_forward_ios_rounded),
-                      color: (pageIndex < pageMaxSize)
-                          ? textColor
-                          : Colors.transparent,
-                    ),
-                  ],
+                      IconButton(
+                        onPressed: () {
+                          isLoadedAPI = false;
+                          if (pageIndex < pageMaxSize) {
+                            pageIndex++;
+                          }
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.arrow_forward_ios_rounded),
+                        color: (pageIndex < pageMaxSize)
+                            ? textColor
+                            : Colors.transparent,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
