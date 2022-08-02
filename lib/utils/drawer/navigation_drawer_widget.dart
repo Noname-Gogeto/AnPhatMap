@@ -10,7 +10,7 @@ import '../../views/profile/profile_screens.dart';
 import '../color/theme.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
-  final padding = const EdgeInsets.symmetric(horizontal: 20);
+  final padding = const EdgeInsets.symmetric(horizontal: 15);
   final Map<String, dynamic>? userInfo;
   NavigationDrawerWidget({
     Key? key,
@@ -51,8 +51,14 @@ class NavigationDrawerWidget extends StatelessWidget {
                     icon: Icons.people,
                     // onClicked: () => Navigator.of(context).pop(),
                     onClicked: () {
-                      selectedItem(context, 0);
-                      activeName = 'customer';
+                      if (activeName == 'customer') {
+                        () {
+                          Navigator.pop(context);
+                        };
+                      } else {
+                        selectedItem(context, 0);
+                        activeName = 'customer';
+                      }
                     },
                     active: activeName == 'customer',
                   ),
@@ -61,7 +67,10 @@ class NavigationDrawerWidget extends StatelessWidget {
                     text: 'Map',
                     icon: Icons.pin_drop_outlined,
                     onClicked: () {
-                      selectedItem(context, 1);
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MapScreen(),
+                      ));
                       activeName = 'map';
                     },
                     active: activeName == 'map',
@@ -72,18 +81,31 @@ class NavigationDrawerWidget extends StatelessWidget {
                     text: 'Sản phẩm',
                     icon: Icons.production_quantity_limits_rounded,
                     onClicked: () {
-                      selectedItem(context, 3);
-                      activeName = 'product';
+                      if (activeName == 'product') {
+                        () {
+                          Navigator.of(context).pop();
+                        };
+                      } else {
+                        selectedItem(context, 3);
+                        activeName = 'product';
+                      }
                     },
                     active: activeName == 'product',
                   ),
+
                   const SizedBox(height: 15),
                   buildMenuItem(
                     text: 'Thành viên',
                     icon: Icons.people_alt_outlined,
                     onClicked: () {
-                      selectedItem(context, 4);
-                      activeName = 'employee';
+                      if (activeName == 'employee') {
+                        () {
+                          Navigator.of(context).pop();
+                        };
+                      } else {
+                        selectedItem(context, 4);
+                        activeName = 'employee';
+                      }
                     },
                     active: activeName == 'employee',
                   ),
@@ -226,7 +248,7 @@ class NavigationDrawerWidget extends StatelessWidget {
 
   void selectedItem(BuildContext context, int index) {
     try {
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => listPage[index],
       ));

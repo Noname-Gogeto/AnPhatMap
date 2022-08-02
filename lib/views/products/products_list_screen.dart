@@ -140,14 +140,16 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
 
   Widget getDemoProductInfo(int index) {
     return Container(
-      padding: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 10),
+
       color: const Color.fromARGB(255, 244, 242, 242),
       // color: themeColor,
       child: Container(
         // padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           border: Border.all(
-            color: buttonPrimaryColorActive,
+            // color: buttonPrimaryColorActive,
+            color: Colors.transparent,
             style: BorderStyle.solid,
             width: 1.0,
           ),
@@ -280,7 +282,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                     },
                     icon: Icon(
                       Icons.sell_rounded,
-                      color: Colors.green,
+                      color: themeColor,
                     ),
                   )
                 ],
@@ -354,69 +356,68 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
           ],
         ),
         drawer: NavigationDrawerWidget(userInfo: userInfo),
-        backgroundColor: const Color.fromARGB(255, 244, 242, 242),
+        // backgroundColor: const Color.fromARGB(255, 244, 242, 242),
+        backgroundColor: backgroundColor,
+
         body: Container(
           padding: const EdgeInsets.all(20),
-          color: const Color.fromARGB(255, 244, 242, 242),
+          color: backgroundColor,
           child: Column(
             children: [
               Container(
                 margin: EdgeInsets.only(bottom: 15),
+                color: backgroundColor,
                 child: Column(
                   children: [
-                    Theme(
-                        data: Theme.of(context)
-                            .copyWith(primaryColor: themeColor),
-                        child: TextField(
-                            onChanged: (value) {
-                              // if (dateFromController.text == '' &&
-                              //     dateToController.text == '' &&
-                              //     addressController.text == '' &&
-                              //     idStaffInChargeController.text == '' &&
-                              //     idUpdateStaffController.text == '' &&
-                              //     searchController.text == '') {
-                              //   isLoadedAPI = false;
-                              // }
-                              pageIndex = 1;
+                    TextField(
+                      onChanged: (value) {
+                        // if (dateFromController.text == '' &&
+                        //     dateToController.text == '' &&
+                        //     addressController.text == '' &&
+                        //     idStaffInChargeController.text == '' &&
+                        //     idUpdateStaffController.text == '' &&
+                        //     searchController.text == '') {
+                        //   isLoadedAPI = false;
+                        // }
+                        pageIndex = 1;
+                        setState(() {});
+                      },
+                      controller: searchController,
+                      cursorColor: componentPrimaryColor,
+                      enableSuggestions: true,
+                      autocorrect: true,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
+                          hintText: 'Tìm kiếm sản phẩm',
+                          hintStyle: TextStyle(fontSize: 16),
+                          prefixIcon: Icon(
+                            Icons.production_quantity_limits_rounded,
+                            color: themeColor,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: () {
+                              print('Filter press');
+                              // searchFilterOptions();
                               setState(() {});
                             },
-                            controller: searchController,
-                            cursorColor: componentPrimaryColor,
-                            enableSuggestions: true,
-                            autocorrect: true,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 10),
-                                hintText: 'Tìm kiếm sản phẩm',
-                                hintStyle: TextStyle(fontSize: 16),
-                                prefixIcon: Icon(
-                                  Icons.production_quantity_limits_rounded,
-                                  color: themeColor,
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(Icons.search),
-                                  onPressed: () {
-                                    print('Filter press');
-                                    // searchFilterOptions();
-                                    setState(() {});
-                                  },
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: themeColor),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                fillColor: Color.fromRGBO(250, 250, 250, 1),
-                                filled: true),
-                            style: TextStyle(
-                              color: Colors.black,
-                            )))
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: themeColor),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          fillColor: Color.fromRGBO(250, 250, 250, 1),
+                          filled: true),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   ],
                 ),
               ),

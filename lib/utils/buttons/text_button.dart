@@ -215,10 +215,15 @@ Widget dataToTextFieldWithLableInDialog(
 }
 
 Widget dataToTextFieldWithLable2(
-    String label, String value, bool readOnly, BuildContext context,
-    {String? inputType = 'text',
-    TextEditingController? textController,
-    bool? highContrast = false}) {
+  String label,
+  String value,
+  bool readOnly,
+  BuildContext context, {
+  String? inputType = 'text',
+  TextEditingController? textController,
+  bool? highContrast = false,
+  double sizeWidth = 0,
+}) {
   TextInputType keyboardInputType = TextInputType.text;
   switch (inputType) {
     case 'password':
@@ -236,7 +241,9 @@ Widget dataToTextFieldWithLable2(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          width: MediaQuery.of(context).size.width - 20,
+          width: (sizeWidth == 0)
+              ? MediaQuery.of(context).size.width - 20
+              : sizeWidth,
           child: TextFormField(
             style: TextStyle(fontSize: 13),
             onTap: inputType == 'date'
@@ -256,7 +263,7 @@ Widget dataToTextFieldWithLable2(
             readOnly: readOnly,
             keyboardType: keyboardInputType,
             minLines: 1,
-            maxLines: 5,
+            maxLines: 10,
             // cursorColor: componentPrimaryColor,
 
             enableInteractiveSelection: false,
@@ -274,16 +281,22 @@ Widget dataToTextFieldWithLable2(
                 borderRadius: BorderRadius.circular(5),
               ),
               focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: themeColor),
+                  borderSide: BorderSide(
+                    color: themeColor,
+                    // color: Colors.transparent,
+                  ),
                   borderRadius: BorderRadius.all(Radius.circular(5))),
               enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: themeColor),
+                  borderSide: BorderSide(
+                    color: themeColor,
+                    // color: Colors.transparent,
+                  ),
                   borderRadius: BorderRadius.all(Radius.circular(5))),
               fillColor: highContrast == true
                   ? Color.fromRGBO(250, 250, 250, 1)
                   : readOnly
                       ? Colors.transparent
-                      : Color.fromRGBO(250, 250, 250, 1),
+                      : componentTextColor,
             ),
           ),
         ),

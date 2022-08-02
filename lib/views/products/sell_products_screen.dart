@@ -157,6 +157,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
           dataFormat(widget.jsonData!['content'][index]['id'].toString()),
           true,
           context,
+          highContrast: true,
         ),
         Container(
           height: 65,
@@ -385,7 +386,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
         ),
         iconTheme: IconThemeData(color: buttonPrimaryColorDeactive),
       ),
-      backgroundColor: Color.fromARGB(255, 244, 242, 242),
+      backgroundColor: backgroundColor,
       body: getFullproductInfo(widget.productIndex),
     );
   }

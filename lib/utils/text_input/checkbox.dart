@@ -42,26 +42,3 @@ Widget squareCheckBoxWithLabel(String label, BuildContext context,
         )),
   );
 }
-
-Future<bool> saveUser(String user) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.setString('', user);
-}
-
-// Future<dynamic> login(String username, String password) async {
-//   try {
-//     var res =
-//         await dio.post("LOGIN-URL", body: {"user": username, "pass": password});
-
-//     if (res.statusCode == 200) {
-//       final userIsStored = await saveUser(jsonEncode(res.data));
-
-//       if (userIsStored) {
-//         print('USER HAS BE STORED TO SHAREDPREFERENCES');
-//       }
-//       user.fromJson(res.data);
-//     } else {}
-//   } catch (e) {
-//     throw e.toString();
-//   }
-// }

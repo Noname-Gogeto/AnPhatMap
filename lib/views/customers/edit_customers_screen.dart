@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, must_call_super
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_call_super, avoid_print, avoid_init_to_null
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'dart:convert';
@@ -10,21 +10,18 @@ import 'package:rcore/controller/ServicesController.dart';
 import 'package:rcore/utils/buttons/button.dart';
 import 'package:rcore/utils/color/theme.dart';
 import 'package:rcore/utils/dialogs/dialog.dart';
-import 'package:rcore/views/landing/login_screen.dart';
 
 import '../../utils/buttons/text_button.dart';
 
 class EditCustomerScreen extends StatefulWidget {
-  final int? uid;
-  final String? auth;
   final Map<String, dynamic>? jsonData;
+  final Map<String, dynamic>? userInfo;
   final int? index;
   const EditCustomerScreen({
     Key? key,
-    this.uid,
-    this.auth,
     this.jsonData,
     this.index,
+    this.userInfo,
   }) : super(key: key);
 
   @override
@@ -47,6 +44,12 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
   // TextEditingController maximumAreaController = TextEditingController();
   // TextEditingController noteController = TextEditingController();
 
+  // String dataFormat(String? str, String showStr) =>
+  //     (str == null || str == '' || str == 'null') ? showStr : str;
+
+  String dataFormat(String? str) =>
+      (str == null || str == '' || str == 'null') ? '' : str;
+
   @override
   void initState() {
     idController.text = '';
@@ -60,12 +63,6 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
     addressController.text =
         dataFormat(widget.jsonData!['data'][widget.index]['dia_chi']);
   }
-
-  // String dataFormat(String? str, String showStr) =>
-  //     (str == null || str == '' || str == 'null') ? showStr : str;
-
-  String dataFormat(String? str) =>
-      (str == null || str == '' || str == 'null') ? '' : str;
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +78,7 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
         ),
         iconTheme: IconThemeData(color: buttonPrimaryColorDeactive),
       ),
+      backgroundColor: backgroundColor,
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Container(
@@ -255,110 +253,167 @@ class _EditCustomerScreen extends State<EditCustomerScreen> {
                   //         widget.jsonData!['data'][widget.index]['ghi_chu']),
                   //     true,
                   //     context),
-                  SizedBox(
+
+                  // SizedBox(width: 5),
+                  Container(
+                    // padding: EdgeInsets.only(left: 5),
+                    // alignment: Alignment.centerLeft,
+                    // width: MediaQuery.of(context).size.width - (20 + 40 + 10),
                     width: MediaQuery.of(context).size.width - 20,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // SizedBox(width: 5),
-                        SizedBox(
-                          // padding: EdgeInsets.only(left: 5),
-                          // alignment: Alignment.centerLeft,
-                          width: MediaQuery.of(context).size.width -
-                              (20 + 40 + 10),
-                          height: 40,
-                          child: customSizedButton(
-                            'Sửa',
+                    height: 40,
+                    child: customSizedButton(
+                      'Sửa',
+                      context,
+                      Icons.edit,
+                      themeColor,
+                      10,
+                      () {
+                        GetAPI(
+                            'https://anphat.andin.io/index.php?r=restful-api/edit-khach-hang',
                             context,
-                            Icons.edit,
-                            Colors.green,
-                            10,
-                            () {
-                              GetAPI(
-                                  'https://anphat.andin.io/index.php?r=restful-api/edit-khach-hang',
-                                  context,
-                                  'POST', {
-                                'uid': widget.uid.toString(),
-                                'auth': widget.auth,
-                                'id': widget.jsonData!['data'][widget.index]
-                                        ['id']
-                                    .toString(),
-                                'hoTen': fullNameController.text,
-                                'dienThoai': phoneNumberController.text,
-                                'email': emailController.text,
-                                'ngaySinh': birthdayController.text,
-                                'diaChi': addressController.text,
-                              }).then((Map<String, dynamic>? json) => ({
-                                    if (json != null)
-                                      {
-                                        notiDialog('Thông báo', json['message'],
-                                            () async {
-                                          var prefs = await SharedPreferences
-                                              .getInstance();
-                                          await prefs.setString('userInfo',
-                                              jsonEncode(json['data']));
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        }, context)
-                                      }
-                                  }));
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              yesNoDialog('Thông báo',
-                                  'Bạn có muốn xóa thông tin khách hàng không?',
-                                  () {
-                                GetAPI(
-                                    'https://anphat.andin.io/index.php?r=restful-api/xoa-khach-hang',
-                                    context,
-                                    'POST', {
-                                  'uid': widget.uid.toString(),
-                                  'auth': widget.auth,
-                                  'id': widget.jsonData!['data'][widget.index]
-                                          ['id']
-                                      .toString(),
-                                }).then((Map<String, dynamic>? json) => ({
-                                      if (json != null)
-                                        {
-                                          notiDialog(
-                                              'Thông báo', json['message'],
-                                              () async {
-                                            var prefs = await SharedPreferences
-                                                .getInstance();
-                                            await prefs.setString('userInfo',
-                                                jsonEncode(json['data']));
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                          }, context)
-                                        }
-                                    }));
-                              }, () => Navigator.of(context).pop(), context);
-                            },
-                            style: ButtonStyle(
-                              padding:
-                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                      EdgeInsets.all(8.5)),
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  buttonPrimaryColorText),
-                              backgroundColor:
-                                  MaterialStateProperty.all<Color>(Colors.red),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      side: BorderSide(color: Colors.red))),
-                            ),
-                            child: Icon(Icons.delete),
-                          ),
-                        ),
-                      ],
+                            'POST', {
+                          'uid': widget.userInfo!['id'].toString(),
+                          'auth': widget.userInfo!['auth_key'].toString(),
+                          'id': widget.jsonData!['data'][widget.index]['id']
+                              .toString(),
+                          'hoTen': fullNameController.text,
+                          'dienThoai': phoneNumberController.text,
+                          'email': emailController.text,
+                          'ngaySinh': birthdayController.text,
+                          'diaChi': addressController.text,
+                        }).then((Map<String, dynamic>? json) => ({
+                              if (json != null)
+                                {
+                                  notiDialog('Thông báo', json['message'],
+                                      () async {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  }, context)
+                                }
+                            }));
+                      },
                     ),
-                  )
+                    // child: ElevatedButton(
+                    //   onPressed: () {
+                    //     GetAPI(
+                    //         'https://anphat.andin.io/index.php?r=restful-api/edit-khach-hang',
+                    //         context,
+                    //         'POST', {
+                    //       'uid': widget.userInfo!['id'].toString(),
+                    //       'auth': widget.userInfo!['auth_key'].toString(),
+                    //       'id': widget.jsonData!['data'][widget.index]['id']
+                    //           .toString(),
+                    //       'hoTen': fullNameController.text,
+                    //       'dienThoai': phoneNumberController.text,
+                    //       'email': emailController.text,
+                    //       'ngaySinh': birthdayController.text,
+                    //       'diaChi': addressController.text,
+                    //     }).then((Map<String, dynamic>? json) => ({
+                    //           if (json != null)
+                    //             {
+                    //               notiDialog('Thông báo', json['message'],
+                    //                   () async {
+                    //                 Navigator.pop(context);
+                    //                 Navigator.pop(context);
+                    //               }, context)
+                    //             }
+                    //         }));
+                    //   },
+                    //   style: ButtonStyle(
+                    //     padding:
+                    //         MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    //             EdgeInsets.all(8.5)),
+                    //     foregroundColor: MaterialStateProperty.all<Color>(
+                    //         buttonPrimaryColorText),
+                    //     backgroundColor:
+                    //         MaterialStateProperty.all<Color>(Colors.red),
+                    //     shape:
+                    //         MaterialStateProperty.all<RoundedRectangleBorder>(
+                    //             RoundedRectangleBorder(
+                    //                 borderRadius: BorderRadius.circular(5),
+                    //                 side: BorderSide(color: Colors.red))),
+                    //   ),
+                    //   child: Icon(Icons.delete),
+                    // ),
+                  ),
+                  Container(
+                    // padding: EdgeInsets.only(top: 10),
+                    alignment: Alignment.centerRight,
+
+                    // child: ElevatedButton(
+                    //   onPressed: () {
+                    //     yesNoDialog('Thông báo',
+                    //         'Bạn có muốn xóa thông tin khách hàng không?',
+                    //         () {
+                    //       GetAPI(
+                    //           'https://anphat.andin.io/index.php?r=restful-api/xoa-khach-hang',
+                    //           context,
+                    //           'POST', {
+                    //         'uid': widget.userInfo!['id'].toString(),
+                    //         'auth': widget.userInfo!['auth_key'].toString(),
+                    //         'id': widget.jsonData!['data'][widget.index]['id']
+                    //             .toString(),
+                    //       }).then((Map<String, dynamic>? json) => ({
+                    //             if (json != null)
+                    //               {
+                    //                 notiDialog('Thông báo', json['message'],
+                    //                     () async {
+                    //                   Navigator.of(context).pop();
+                    //                   Navigator.of(context).pop();
+                    //                 }, context)
+                    //               }
+                    //           }));
+                    //     }, () => Navigator.of(context).pop(), context);
+                    //   },
+                    //   style: ButtonStyle(
+                    //     padding:
+                    //         MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    //             EdgeInsets.all(8.5)),
+                    //     foregroundColor: MaterialStateProperty.all<Color>(
+                    //         buttonPrimaryColorText),
+                    //     backgroundColor:
+                    //         MaterialStateProperty.all<Color>(Colors.red),
+                    //     shape:
+                    //         MaterialStateProperty.all<RoundedRectangleBorder>(
+                    //             RoundedRectangleBorder(
+                    //                 borderRadius: BorderRadius.circular(5),
+                    //                 side: BorderSide(color: Colors.red))),
+                    //   ),
+                    //   child: Icon(Icons.delete),
+                    // ),
+                    child: TextButton(
+                      child: Text(
+                        'Xóa khách hàng',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        yesNoDialog('Thông báo',
+                            'Bạn có muốn xóa thông tin khách hàng không?', () {
+                          GetAPI(
+                              'https://anphat.andin.io/index.php?r=restful-api/xoa-khach-hang',
+                              context,
+                              'POST', {
+                            'uid': widget.userInfo!['id'].toString(),
+                            'auth': widget.userInfo!['auth_key'].toString(),
+                            'id': widget.jsonData!['data'][widget.index]['id']
+                                .toString(),
+                          }).then((Map<String, dynamic>? json) => ({
+                                if (json != null)
+                                  {
+                                    notiDialog('Thông báo', json['message'],
+                                        () async {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    }, context)
+                                  }
+                              }));
+                        }, () => Navigator.of(context).pop(), context);
+                      },
+                    ),
+                  ),
                 ],
               ),
             ],

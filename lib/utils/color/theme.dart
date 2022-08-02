@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const themeColor = Color.fromRGBO(251, 148, 0, 1);
 const secondaryColor = Color.fromRGBO(0, 0, 0, 1);
 const textColor = Color.fromRGBO(0, 0, 0, 1);
+const backgroundColor = Color.fromRGBO(245, 245, 245, 1);
 
 const componentTextColor = Color.fromRGBO(255, 255, 255, 1);
 const componentButtonBackground = Colors.white;

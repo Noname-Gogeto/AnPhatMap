@@ -12,6 +12,7 @@ import 'package:rcore/views/landing/forgotpassword_screen.dart';
 import 'package:rcore/views/landing/signup_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/buttons/text_button.dart';
+import '../../utils/text_input/checkbox.dart';
 import '../customers/customers_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -34,9 +35,32 @@ class _LoginScreen extends State<LoginScreen> {
   // }
 
   bool isObscure = true;
+  bool isSaveAcount = false;
+  String? userName;
+  String? password;
+
+  saveValues() async {
+    if (isSaveAcount) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("username", usernameController.text);
+      prefs.setString("password", passwordController.text);
+    }
+  }
+
+  getSharedPreferencesValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userName = prefs.getString("username") ?? "";
+    password = prefs.getString("password") ?? "";
+    if (userName != '' && password != '') {
+      usernameController.text = userName!;
+      passwordController.text = password!;
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    getSharedPreferencesValue();
     return Scaffold(
         body: Container(
       width: MediaQuery.of(context).size.width,
@@ -65,8 +89,9 @@ class _LoginScreen extends State<LoginScreen> {
               isObscure = !isObscure;
             });
           }, isObscure, passwordController, context),
-          // squareCheckBoxWithLabel(
-          //     'Hiển thị mật khẩu', context, showPass, hidePassword),
+          squareCheckBoxWithLabel('Lưu tài khoản', context, (value) {
+            isSaveAcount = value!;
+          }, isSaveAcount),
           primarySizedButton(
             'Đăng nhập',
             context,
@@ -86,7 +111,8 @@ class _LoginScreen extends State<LoginScreen> {
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) => CustomerScreen()));
-                        }, context)
+                        }, context),
+                        saveValues(),
                       }
                   }));
             },

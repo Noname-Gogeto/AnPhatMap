@@ -111,18 +111,19 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
   Widget getEmployeeInfo(int index) {
     return Container(
       padding: const EdgeInsets.only(bottom: 10),
-      color: const Color.fromARGB(255, 244, 242, 242),
+      color: backgroundColor,
       // color: themeColor,
       child: Container(
         // padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           border: Border.all(
-            color: buttonPrimaryColorActive,
+            // color: buttonPrimaryColorActive,
+            color: Colors.transparent,
             style: BorderStyle.solid,
             width: 1.0,
           ),
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: TextButton(
           onPressed: () {
@@ -133,12 +134,12 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
             children: [
               Column(
                 children: [
-                  textIconBetween(
-                      Icons.perm_identity,
-                      Colors.black,
-                      dataFormat(jsonData!['data'][index]['id'].toString()),
-                      context,
-                      isValueBool: true),
+                  // textIconBetween(
+                  //     Icons.perm_identity,
+                  //     Colors.black,
+                  //     dataFormat(jsonData!['data'][index]['id'].toString()),
+                  //     context,
+                  //     isValueBool: true),
                   textIconBetween(
                       Icons.person,
                       Colors.black,
@@ -268,10 +269,10 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
           ],
         ),
         drawer: NavigationDrawerWidget(userInfo: userInfo),
-        backgroundColor: const Color.fromARGB(255, 244, 242, 242),
+        backgroundColor: backgroundColor,
         body: Container(
           padding: const EdgeInsets.all(20),
-          color: const Color.fromARGB(255, 244, 242, 242),
+          color: backgroundColor,
           child: Column(
             children: [
               // Container(
