@@ -49,6 +49,8 @@ dependencies:
   google_maps_flutter: ^2.1.8
   bottom_drawer: ^0.0.5
   location: ^4.4.0
+  darq: ^1.2.1
+  share: ^2.0.4
 
 dev_dependencies:
   flutter_test:
